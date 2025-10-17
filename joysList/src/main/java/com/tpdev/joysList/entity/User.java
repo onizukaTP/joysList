@@ -3,14 +3,17 @@ package com.tpdev.joysList.entity;
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
+import java.util.Date;
+
 @Data
 @NoArgsConstructor
-@RequiredArgsConstructor
-public class Users {
+@AllArgsConstructor
+public class User {
 
     @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -27,5 +30,8 @@ public class Users {
 
     @Column(name = "password")
     private String password;
+
+    @Column(name = "created_at")
+    private Date createdAt;
 
 }
