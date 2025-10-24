@@ -1,6 +1,8 @@
 package com.tpdev.joysList.controller;
 
+import com.tpdev.joysList.dto.AdDTO;
 import com.tpdev.joysList.entity.Ad;
+import com.tpdev.joysList.service.AdMapper;
 import com.tpdev.joysList.service.AdService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,18 +23,36 @@ public class AdController {
         return new ResponseEntity<>(saved, HttpStatus.OK);
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<List<Ad>> getAds(
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) Double low,
+            @RequestParam(required = false) Double high
+    ) {
+        List<Ad> ads = adService.searchAds(category, keyword, low, high);
+        if (ads.isEmpty()) {
+            return ResponseEntity.ok(List.of());
+        }
+        return ResponseEntity.ok(ads);
+    }
+
     @GetMapping("/all")
     public ResponseEntity<List<Ad>> getAllAds() {
         List<Ad> ads =adService.getAllAds();
         return new ResponseEntity<>(ads, HttpStatus.OK);
     }
 
-    @GetMapping("/keyword")
-    public ResponseEntity<List<Ad>> searchAds(
-            @RequestParam(required = false) String keyword
+    @GetMapping
+    public ResponseEntity<List<AdDTO>> searchAds(
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) String category
     ) {
-        List<Ad> ads = adService.searchAds(keyword);
-        return ResponseEntity.ok(ads);
+        List<AdDTO> adDTOs = adService.searchAds(keyword)
+                .stream()
+                .map(AdMapper::toDTO)
+                .toList();
+        return ResponseEntity.ok(adDTOs);
     }
 
     @GetMapping("/priceRange")
@@ -60,9 +80,10 @@ public class AdController {
         return new ResponseEntity<>(ads, HttpStatus.OK);
     }
 
-    @GetMapping("/id/{id}")
-    public ResponseEntity<Ad> getAd(@PathVariable Long id) {
+    @GetMapping("/{id}")
+    public ResponseEntity<AdDTO> getAd(@PathVariable Long id) {
         return adService.getAd(id)
+                .map(AdMapper::toDTO)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }

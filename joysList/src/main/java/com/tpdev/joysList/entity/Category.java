@@ -1,27 +1,26 @@
 package com.tpdev.joysList.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.time.LocalDateTime;
+
 import java.util.List;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Ad {
+public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
-    private String title;
-    private String description;
-    private Double price;
+    private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "category_id", nullable = false)
-    @JsonBackReference
-    private Category category;
+    private String name;
+    private String description;
+
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = false)
+    @JsonManagedReference
+    private List<Ad> ads;
 }

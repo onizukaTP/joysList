@@ -22,6 +22,10 @@ public class AdService {
         return adRepository.findByTitleContainingIgnoreCase(keyword);
     }
 
+    public List<Ad> searchAds(String keyword, String category, Double low, Double high) {
+        return adRepository.searchAds(category, low, high, keyword);
+    }
+
     public Optional<Ad> getAd(Long id) {
         return adRepository.findById(id);
     }
