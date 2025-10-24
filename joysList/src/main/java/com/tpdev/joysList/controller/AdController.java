@@ -27,7 +27,7 @@ public class AdController {
         return new ResponseEntity<>(ads, HttpStatus.OK);
     }
 
-    @GetMapping
+    @GetMapping("/keyword")
     public ResponseEntity<List<Ad>> searchAds(
             @RequestParam(required = false) String keyword
     ) {
@@ -65,5 +65,20 @@ public class AdController {
         return adService.getAd(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Ad> updateAt(
+            @PathVariable Long id,
+            @RequestBody Ad ad
+    ) {
+        Ad updatedAd = adService.updateAd(id, ad);
+        return ResponseEntity.ok(updatedAd);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteAd (@PathVariable Long id) {
+        adService.deleteAd(id);
+        return ResponseEntity.ok("Ad successfully deleted.");
     }
 }

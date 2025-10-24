@@ -44,4 +44,22 @@ public class AdService {
     public List<Ad> getAllAds() {
         return adRepository.findAll();
     }
+
+    public Ad updateAd(Long id, Ad updatedAd) {
+        return adRepository.findById(id)
+                .map(existingAd -> {
+                    existingAd.setTitle(updatedAd.getTitle());
+                    existingAd.setDescription(updatedAd.getDescription());
+                    existingAd.setPrice(updatedAd.getPrice());
+                    return adRepository.save(existingAd);
+                })
+                .orElseThrow(() -> new RuntimeException("Ad not found with id: " + id));
+    }
+
+    public void deleteAd(Long id) {
+        if (!adRepository.existsById(id)) {
+            throw new RuntimeException("Ad not found with id: " + id);
+        }
+        adRepository.deleteById(id);
+    }
 }
