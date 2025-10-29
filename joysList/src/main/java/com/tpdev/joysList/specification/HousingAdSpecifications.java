@@ -1,7 +1,7 @@
 package com.tpdev.joysList.specification;
 
 import com.tpdev.joysList.entity.HousingAd;
-import com.tpdev.joysList.entity.HousingType;
+import com.tpdev.joysList.entity.enums.HousingType;
 import org.springframework.data.jpa.domain.Specification;
 
 public class HousingAdSpecifications {
@@ -29,7 +29,7 @@ public class HousingAdSpecifications {
                         cb.equal(root.get("furnished"), furnished);
     }
 
-    public static Specification<HousingAd>  catsOk(Boolean catsOk) {
+    public static Specification<HousingAd> catsOk(Boolean catsOk) {
         return (root, query, cb) ->
                 catsOk == null ? cb.conjunction() :
                         cb.equal(root.get("catsOk"), catsOk);

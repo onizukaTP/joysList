@@ -1,7 +1,7 @@
 package com.tpdev.joysList.controller.category;
 
 import com.tpdev.joysList.entity.HousingAd;
-import com.tpdev.joysList.entity.HousingType;
+import com.tpdev.joysList.entity.enums.HousingType;
 import com.tpdev.joysList.service.category.HousingAdService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,10 +26,12 @@ public class HousingAdController {
             @RequestParam(required = false) Byte minBaths,
             @RequestParam(required = false) Boolean furnished,
             @RequestParam(required = false) Boolean catsOk,
-            @RequestParam(required = false) Boolean dogsOk
+            @RequestParam(required = false) Boolean dogsOk,
+            @RequestParam(required = false, defaultValue = "createdAt") String sortBy,
+            @RequestParam(required = false, defaultValue = "desc") String sortOrder
             ) {
         List<HousingAd> filteredList = housingAdService.filter(
-                type, minBeds, minBaths, furnished, catsOk, dogsOk
+                type, minBeds, minBaths, furnished, catsOk, dogsOk, sortBy, sortOrder
         );
 
         return new ResponseEntity<>(filteredList, HttpStatus.OK);

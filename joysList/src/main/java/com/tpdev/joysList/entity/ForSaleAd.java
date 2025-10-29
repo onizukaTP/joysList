@@ -1,6 +1,7 @@
 package com.tpdev.joysList.entity;
 
-import com.tpdev.joysList.entity.enums.HousingType;
+import com.tpdev.joysList.entity.enums.Condition;
+import com.tpdev.joysList.entity.enums.SoldBy;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -12,15 +13,13 @@ import lombok.NoArgsConstructor;
 @Entity
 @EqualsAndHashCode(callSuper = true)
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class HousingAd extends Ad{
-    private byte numberOfBeds;
-    private byte numberOfBathrooms;
-    private boolean catsOk;
-    private boolean dogsOk;
-    private boolean furnished;
+@NoArgsConstructor
+public class ForSaleAd extends Ad{
 
     @Enumerated(EnumType.STRING)
-    private HousingType type;
+    private SoldBy soldBy;
+
+    @Enumerated(EnumType.STRING)
+    private Condition condition;
 }

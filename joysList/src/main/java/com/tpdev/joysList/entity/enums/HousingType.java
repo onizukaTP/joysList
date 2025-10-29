@@ -1,4 +1,4 @@
-package com.tpdev.joysList.entity;
+package com.tpdev.joysList.entity.enums;
 
 public enum HousingType {
     APARTMENT,

@@ -20,6 +20,10 @@ public class Ad {
     private String description;
     private Double price;
     private String location;
+    private Boolean hasImage;
+    private Boolean postedToday;
+    private Boolean isFree;
+    private Boolean deliveryAvailable;
     private LocalDateTime createdAt = LocalDateTime.now();
 
     @ManyToOne
