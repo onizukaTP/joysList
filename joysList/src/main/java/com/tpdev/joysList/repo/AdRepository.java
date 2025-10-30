@@ -9,25 +9,5 @@ import java.util.List;
 
 @Repository
 public interface AdRepository extends JpaRepository<Ad, Long> {
-    List<Ad> findByTitleContainingIgnoreCase(String keyword);
-    List<Ad> findByPriceBetweenOrderByPriceAsc(Double lowRange, Double highRange);
-    List<Ad> findByPriceGreaterThanEqualOrderByPriceAsc(Double lowRange);
-    List<Ad> findByCategory_NameIgnoreCase(String categoryName);
-    List<Ad> findByCategory_NameIgnoreCaseAndTitleContainingIgnoreCase(String category, String keyword);
-
-
-    @Query("""
-        SELECT a FROM Ad a
-        WHERE (:category IS NULL OR LOWER(a.category.name) = LOWER(:category))
-        AND (:lowPrice IS NULL OR a.price >= :lowPrice)
-        AND (:highPrice IS NULL OR a.price <= :highPrice)
-        AND (:keyword IS NULL OR LOWER(a.title) LIKE LOWER(CONCAT('%', :keyword, '%')))
-        """)
-    List<Ad> searchAds(
-            @Param("category") String category,
-            @Param("lowPrice") Double lowPrice,
-            @Param("highPrice") Double highPrice,
-            @Param("keyword") String keyword
-    );
-
+    List<Ad> findByTitleContainingIgnoreCase(String title);
 }

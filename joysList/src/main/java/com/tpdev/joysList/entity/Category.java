@@ -19,8 +19,7 @@ public class Category {
     private String description;
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
-    private List<Ad> ads;
+    @JsonManagedReference("category-subcategories")
+    private List<Subcategory> subcategories;
+
 }

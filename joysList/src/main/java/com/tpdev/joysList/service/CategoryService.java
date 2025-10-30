@@ -24,17 +24,6 @@ public class CategoryService {
         return categoryRepository.findByName(name);
     }
 
-    public Category updateCategory(Long id, Category category) {
-        return categoryRepository.findById(id)
-                .map(existingCategory -> {
-                    existingCategory.setName(category.getName());
-                    existingCategory.setDescription(category.getDescription());
-                    existingCategory.setAds(category.getAds());
-                    return categoryRepository.save(existingCategory);
-                })
-                .orElseThrow(() -> new RuntimeException("Category not found with id: " + id));
-    }
-
     public void deleteCategory(Long id) {
         categoryRepository.deleteById(id);
     }

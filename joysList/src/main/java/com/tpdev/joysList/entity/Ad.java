@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -26,10 +25,9 @@ public class Ad {
     private Boolean deliveryAvailable;
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    @ManyToOne
-    @JoinColumn(name = "category_id", nullable = false)
-    @JsonBackReference
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
-    private Category category;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "subcategory_id", nullable = false)
+    @JsonBackReference("subcategory-ads")
+    private Subcategory subcategory;
+
 }

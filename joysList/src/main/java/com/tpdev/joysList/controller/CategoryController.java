@@ -31,14 +31,6 @@ public class CategoryController {
         return ResponseEntity.ok(categoryService.getCategoryByName(name));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<?> updateCategory(
-            @PathVariable Long id,
-            @RequestBody Category category
-    ) {
-        return ResponseEntity.ok(categoryService.updateCategory(id, category));
-    }
-
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteCategoryById(@PathVariable Long id) {
         categoryService.deleteCategory(id);

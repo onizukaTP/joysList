@@ -1,8 +1,6 @@
 package com.tpdev.joysList.controller;
 
-import com.tpdev.joysList.dto.AdDTO;
 import com.tpdev.joysList.entity.Ad;
-import com.tpdev.joysList.service.AdMapper;
 import com.tpdev.joysList.service.AdService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,77 +15,31 @@ import java.util.List;
 public class AdController {
     private final AdService adService;
 
+    // create an ad
     @PostMapping
     public ResponseEntity<Ad> createdAt(@RequestBody Ad ad) {
         Ad saved = adService.createAd(ad);
         return new ResponseEntity<>(saved, HttpStatus.OK);
     }
 
+    // basic search
     @GetMapping("/search")
-    public ResponseEntity<List<Ad>> getAds(
-            @RequestParam(required = false) String category,
-            @RequestParam(required = false) String keyword,
-            @RequestParam(required = false) Double low,
-            @RequestParam(required = false) Double high
-    ) {
-        List<Ad> ads = adService.searchAds(category, keyword, low, high);
+    public ResponseEntity<List<Ad>> getAds(@RequestParam(required = false) String title) {
+        List<Ad> ads = adService.search(title);
         if (ads.isEmpty()) {
-            return ResponseEntity.ok(List.of());
+            return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(ads);
     }
 
+    // get everything
     @GetMapping("/all")
     public ResponseEntity<List<Ad>> getAllAds() {
         List<Ad> ads =adService.getAllAds();
         return new ResponseEntity<>(ads, HttpStatus.OK);
     }
 
-    @GetMapping
-    public ResponseEntity<List<AdDTO>> searchAds(
-            @RequestParam(required = false) String keyword,
-            @RequestParam(required = false) String category
-    ) {
-        List<AdDTO> adDTOs = adService.searchAds(keyword)
-                .stream()
-                .map(AdMapper::toDTO)
-                .toList();
-        return ResponseEntity.ok(adDTOs);
-    }
-
-    @GetMapping("/priceRange")
-    public ResponseEntity<?> getAdByPriceRange(
-            @RequestParam(required = false) Double lowRange,
-            @RequestParam(required = false) Double highRange
-    ) {
-        List<Ad> ads = adService.getAdBetweenPriceRange(lowRange, highRange);
-
-        if (highRange == null) {
-            List<Ad> adList = adService.getAdFromPriceRange(lowRange);
-            return new ResponseEntity<>(adList, HttpStatus.OK);
-        }
-
-        if (lowRange != null && highRange < lowRange) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("Are you dumb? highRange should be greater than smallRange.");
-        }
-
-        if (ads.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body("No ads available within that range.");
-        }
-
-        return new ResponseEntity<>(ads, HttpStatus.OK);
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<AdDTO> getAd(@PathVariable Long id) {
-        return adService.getAd(id)
-                .map(AdMapper::toDTO)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-
+    // update
     @PutMapping("/{id}")
     public ResponseEntity<Ad> updateAt(
             @PathVariable Long id,
@@ -97,6 +49,7 @@ public class AdController {
         return ResponseEntity.ok(updatedAd);
     }
 
+    // delete obviously
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteAd (@PathVariable Long id) {
         adService.deleteAd(id);
