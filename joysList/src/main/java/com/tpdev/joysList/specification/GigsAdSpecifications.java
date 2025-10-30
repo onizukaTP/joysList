@@ -1,6 +1,6 @@
 package com.tpdev.joysList.specification;
 
-import com.tpdev.joysList.entity.GigsAd;
+import com.tpdev.joysList.entity.category.GigsAd;
 import com.tpdev.joysList.entity.enums.Gigs;
 import com.tpdev.joysList.entity.enums.PaymentStatus;
 import org.springframework.data.jpa.domain.Specification;

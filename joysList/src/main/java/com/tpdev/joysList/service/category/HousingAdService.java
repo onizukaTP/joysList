@@ -1,14 +1,14 @@
 package com.tpdev.joysList.service.category;
 
-import com.tpdev.joysList.entity.HousingAd;
+import com.tpdev.joysList.entity.category.HousingAd;
 import com.tpdev.joysList.entity.enums.HousingType;
 import com.tpdev.joysList.entity.enums.Laundry;
 import com.tpdev.joysList.entity.enums.Parking;
 import com.tpdev.joysList.entity.enums.RentPeriod;
 import com.tpdev.joysList.repo.category.HousingAdRepository;
+import com.tpdev.joysList.service.BaseAdService;
 import com.tpdev.joysList.specification.HousingAdSpecifications;
-import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Sort;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -16,9 +16,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
-public class HousingAdService {
+public class HousingAdService extends BaseAdService<HousingAd> {
     private final HousingAdRepository repository;
+
+    @Autowired
+    public HousingAdService(HousingAdRepository repository) {
+        super(repository);
+        this.repository = repository;
+    }
+
+    public HousingAd createAd(HousingAd housingAd) {
+        repository.save(housingAd);
+        return housingAd;
+    }
 
     public List<HousingAd> filter (
             HousingType type,
@@ -38,9 +48,7 @@ public class HousingAdService {
             Boolean noApplicationFee,
             RentPeriod rentPeriod,
             Laundry laundry,
-            Parking parking,
-            String sortBy,
-            String sortOrder
+            Parking parking
     ) {
         List<Specification<HousingAd>> specs = new ArrayList<>();
 
@@ -63,16 +71,9 @@ public class HousingAdService {
         if (laundry != null) specs.add(HousingAdSpecifications.laundry(laundry));
         if (parking != null) specs.add(HousingAdSpecifications.parking(parking));
 
-        Sort sort = Sort.by(sortBy);
-        if ("desc".equalsIgnoreCase(sortOrder)) {
-            sort = sort.descending();
-        } else {
-            sort = sort.ascending();
-        }
-
         Specification<HousingAd> finalSpec = specs.stream()
                 .reduce(Specification::and).orElse(null);
 
-        return repository.findAll(finalSpec, sort);
+        return repository.findAll(finalSpec);
     }
 }

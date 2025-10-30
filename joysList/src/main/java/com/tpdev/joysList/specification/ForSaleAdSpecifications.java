@@ -1,7 +1,7 @@
 package com.tpdev.joysList.specification;
 
 import com.tpdev.joysList.entity.enums.Condition;
-import com.tpdev.joysList.entity.ForSaleAd;
+import com.tpdev.joysList.entity.category.ForSaleAd;
 import com.tpdev.joysList.entity.enums.SoldBy;
 import org.springframework.data.jpa.domain.Specification;
 

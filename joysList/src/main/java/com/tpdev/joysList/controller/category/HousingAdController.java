@@ -1,26 +1,35 @@
 package com.tpdev.joysList.controller.category;
 
-import com.tpdev.joysList.entity.HousingAd;
+import com.tpdev.joysList.controller.BaseAdController;
+import com.tpdev.joysList.entity.category.HousingAd;
 import com.tpdev.joysList.entity.enums.HousingType;
 import com.tpdev.joysList.entity.enums.Laundry;
 import com.tpdev.joysList.entity.enums.Parking;
 import com.tpdev.joysList.entity.enums.RentPeriod;
 import com.tpdev.joysList.service.category.HousingAdService;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/ads/housing")
-@RequiredArgsConstructor
-public class HousingAdController {
+public class HousingAdController extends BaseAdController<HousingAd> {
     private final HousingAdService housingAdService;
+
+    @Autowired
+    public HousingAdController(HousingAdService housingAdService) {
+        super(housingAdService);
+        this.housingAdService = housingAdService;
+    }
+
+    @PostMapping
+    public ResponseEntity<HousingAd> createAd(@RequestBody HousingAd housingAd) {
+        housingAdService.createAd(housingAd);
+        return new ResponseEntity<>(housingAd, HttpStatus.CREATED);
+    }
 
     @GetMapping("/filter")
     public ResponseEntity<List<HousingAd>> filterHousing (
@@ -41,14 +50,12 @@ public class HousingAdController {
             @RequestParam(required = false) Boolean noApplicationFee,
             @RequestParam(required = false) RentPeriod rentPeriod,
             @RequestParam(required = false) Laundry laundry,
-            @RequestParam(required = false) Parking parking,
-            @RequestParam(required = false, defaultValue = "createdAt") String sortBy,
-            @RequestParam(required = false, defaultValue = "desc") String sortOrder
+            @RequestParam(required = false) Parking parking
             ) {
         List<HousingAd> filteredList = housingAdService.filter(
                 type, minBeds, minBaths, furnished, catsOk, dogsOk, sqft, privateRoom,
                 privateBath, noSmoking, wheelChairAccessible, airConditioning, evCharging,
-                noBrokerFee, noApplicationFee, rentPeriod, laundry, parking, sortBy, sortOrder
+                noBrokerFee, noApplicationFee, rentPeriod, laundry, parking
         );
 
         return new ResponseEntity<>(filteredList, HttpStatus.OK);

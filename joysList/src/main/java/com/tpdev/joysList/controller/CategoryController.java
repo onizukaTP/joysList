@@ -16,9 +16,9 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @PostMapping
-    public ResponseEntity<Category> createCategory(@RequestBody Category category) {
-        Category saved = categoryService.createCategory(category);
-        return new ResponseEntity<>(saved, HttpStatus.CREATED);
+    public ResponseEntity<String> createCategory(@RequestBody Category category) {
+        categoryService.createCategory(category);
+        return new ResponseEntity<>("category created successfully.", HttpStatus.CREATED);
     }
 
     @GetMapping

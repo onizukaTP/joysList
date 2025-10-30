@@ -11,8 +11,8 @@ import java.util.List;
 public class AdService {
     private final AdRepository adRepository;
 
-    public Ad createAd(Ad ad) {
-        return adRepository.save(ad);
+    public void createAd(Ad ad) {
+        adRepository.save(ad);
     }
 
     public List<Ad> search(String title) {

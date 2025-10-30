@@ -16,8 +16,8 @@ public class SubcategoryService {
         return repository.findByCategoryId(categoryId);
     }
 
-    public Subcategory createSubcategory(Subcategory subcategory) {
-        return repository.save(subcategory);
+    public void createSubcategory(Subcategory subcategory) {
+        repository.save(subcategory);
     }
 
     public void deleteSubcategory(Long id) {
@@ -26,5 +26,9 @@ public class SubcategoryService {
 
     public Subcategory findById(Long id) {
         return repository.findById(id).orElse(null);
+    }
+
+    public List<Subcategory> findAll() {
+        return repository.findAll();
     }
 }

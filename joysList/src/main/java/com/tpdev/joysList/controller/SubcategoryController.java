@@ -15,14 +15,21 @@ import java.util.List;
 public class SubcategoryController {
     private final SubcategoryService service;
 
+    @GetMapping
+    public ResponseEntity<List<Subcategory>> getAll() {
+        return ResponseEntity.ok(service.findAll());
+    }
+
     @GetMapping("/category/{categoryId}")
-    public List<Subcategory> getSubcategories(@PathVariable Long categoryId) {
-        return service.getSubcategoriesByCategory(categoryId);
+    public ResponseEntity<List<Subcategory>> getSubcategories(@PathVariable Long categoryId) {
+        List<Subcategory> result =  service.getSubcategoriesByCategory(categoryId);
+        return ResponseEntity.ok(result);
     }
 
     @PostMapping
-    public Subcategory createSubcategory(@RequestBody Subcategory subcategory) {
-        return service.createSubcategory(subcategory);
+    public ResponseEntity<String> createSubcategory(@RequestBody Subcategory subcategory) {
+        service.createSubcategory(subcategory);
+        return new ResponseEntity<>("Subcategory created successfully.", HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")

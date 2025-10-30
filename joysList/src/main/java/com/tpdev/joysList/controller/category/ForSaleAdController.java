@@ -1,33 +1,41 @@
 package com.tpdev.joysList.controller.category;
 
-import com.tpdev.joysList.entity.ForSaleAd;
+import com.tpdev.joysList.controller.BaseAdController;
+import com.tpdev.joysList.entity.category.ForSaleAd;
 import com.tpdev.joysList.entity.enums.Condition;
 import com.tpdev.joysList.entity.enums.SoldBy;
 import com.tpdev.joysList.service.category.ForSaleAdService;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/ads/forsale")
-@RequiredArgsConstructor
-public class ForSaleAdController {
+@RequestMapping("/api/v1/ads/for_sale")
+public class ForSaleAdController extends BaseAdController<ForSaleAd> {
     private final ForSaleAdService service;
+
+    @Autowired
+    public ForSaleAdController(ForSaleAdService service) {
+        super(service);
+        this.service = service;
+    }
+
+    @PostMapping
+    public ResponseEntity<ForSaleAd> createAd(@RequestBody ForSaleAd forSaleAd) {
+        service.createAd(forSaleAd);
+        return new ResponseEntity<>(forSaleAd, HttpStatus.CREATED);
+    }
 
     @GetMapping("/filter")
     public ResponseEntity<List<ForSaleAd>> filter(
             @RequestParam(required = false)SoldBy soldBy,
-            @RequestParam(required = false)Condition condition,
-            @RequestParam(required = false, defaultValue = "createdAt")String sortBy,
-            @RequestParam(required = false, defaultValue = "desc")String sortOrder
+            @RequestParam(required = false)Condition condition
             ) {
         List<ForSaleAd> filteredList = service.filter(
-                soldBy, condition, sortBy, sortOrder
+                soldBy, condition
         );
         return ResponseEntity.ok(filteredList);
     }

@@ -1,5 +1,6 @@
-package com.tpdev.joysList.entity;
+package com.tpdev.joysList.entity.category;
 
+import com.tpdev.joysList.entity.Ad;
 import com.tpdev.joysList.entity.enums.HousingType;
 import com.tpdev.joysList.entity.enums.Laundry;
 import com.tpdev.joysList.entity.enums.Parking;
@@ -17,7 +18,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class HousingAd extends Ad{
+public class HousingAd extends Ad {
     private Byte numberOfBeds;
     private Byte numberOfBathrooms;
     private Boolean catsOk;

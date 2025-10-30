@@ -1,6 +1,6 @@
 package com.tpdev.joysList.specification;
 
-import com.tpdev.joysList.entity.HousingAd;
+import com.tpdev.joysList.entity.category.HousingAd;
 import com.tpdev.joysList.entity.enums.HousingType;
 import com.tpdev.joysList.entity.enums.Laundry;
 import com.tpdev.joysList.entity.enums.Parking;

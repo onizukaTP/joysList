@@ -1,5 +1,6 @@
-package com.tpdev.joysList.entity;
+package com.tpdev.joysList.entity.category;
 
+import com.tpdev.joysList.entity.Ad;
 import com.tpdev.joysList.entity.enums.Gigs;
 import com.tpdev.joysList.entity.enums.PaymentStatus;
 import jakarta.persistence.Entity;
@@ -15,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class GigsAd extends Ad{
+public class GigsAd extends Ad {
     @Enumerated(EnumType.STRING)
     private Gigs gigs;
 
