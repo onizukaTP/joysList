@@ -24,6 +24,7 @@ public class ForSaleAdController extends BaseAdController<ForSaleAd> {
     }
 
     @PostMapping
+    @Override
     public ResponseEntity<ForSaleAd> createAd(@RequestBody ForSaleAd forSaleAd) {
         service.createAd(forSaleAd);
         return new ResponseEntity<>(forSaleAd, HttpStatus.CREATED);

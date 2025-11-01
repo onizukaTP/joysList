@@ -22,6 +22,7 @@ public class AdFacadeService {
     private final ForSaleAdService forSaleAdService;
     private final EventAdService eventAdService;
     private final GigsAdService gigsAdService;
+    private final JobAdService jobAdService;
     private final AdMapper mapper;
     private final SubcategoryRepository subcategoryRepository;
     private final AdRepository repository;
@@ -35,6 +36,7 @@ public class AdFacadeService {
             case "FOR_SALE" -> forSaleAdService.createAd(mapper.toForSaleAd(dto, subcategory));
             case "EVENT" -> eventAdService.createAd(mapper.toEventAd(dto, subcategory));
             case "GIGS" -> gigsAdService.createAd(mapper.toGigsAd(dto, subcategory));
+            case "JOBS" -> jobAdService.createAd(mapper.toJobAd(dto, subcategory));
             default -> throw new IllegalArgumentException("Unknown ad type: " + dto.getAdType());
         };
     }

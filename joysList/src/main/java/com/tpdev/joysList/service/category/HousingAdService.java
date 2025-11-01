@@ -25,6 +25,7 @@ public class HousingAdService extends BaseAdService<HousingAd> {
         this.repository = repository;
     }
 
+    @Override
     public HousingAd createAd(HousingAd housingAd) {
         repository.save(housingAd);
         return housingAd;

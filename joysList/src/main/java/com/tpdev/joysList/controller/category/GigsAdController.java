@@ -24,6 +24,7 @@ public class GigsAdController extends BaseAdController<GigsAd> {
     }
 
     @PostMapping
+    @Override
     public ResponseEntity<GigsAd> createAd(@RequestBody GigsAd gigsAd) {
         service.createAd(gigsAd);
         return new ResponseEntity<>(gigsAd, HttpStatus.CREATED);

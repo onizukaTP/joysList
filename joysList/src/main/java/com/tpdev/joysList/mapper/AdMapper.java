@@ -46,6 +46,24 @@ public class AdMapper {
         return ad;
     }
 
+    public JobAd toJobAd(AdRequestDto dto, Subcategory subcategory) {
+        JobAd ad = new JobAd();
+        setCommonFields(ad, dto, subcategory);
+        ad.setNonProfitOrganization(dto.getNonProfitOrganization());
+        ad.setInternship(dto.getInternship());
+        ad.setTelecommutingOk(dto.getTelecommutingOk());
+        ad.setEmploymentType(dto.getEmploymentType());
+        ad.setJobTypes(dto.getJobTypes());
+        return ad;
+    }
+
+    public ServiceAd toServiceAd(AdRequestDto dto, Subcategory subcategory) {
+        ServiceAd ad = new ServiceAd();
+        setCommonFields(ad, dto, subcategory);
+        ad.setServiceType(dto.getServiceType());
+        return ad;
+    }
+
     public void setCommonFields(Ad ad, AdRequestDto dto, Subcategory subcategory) {
         ad.setTitle(dto.getTitle());
         ad.setDescription(dto.getDescription());

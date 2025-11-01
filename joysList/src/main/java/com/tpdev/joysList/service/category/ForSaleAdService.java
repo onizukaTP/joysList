@@ -24,6 +24,7 @@ public class ForSaleAdService extends BaseAdService<ForSaleAd> {
         this.repository = repository;
     }
 
+    @Override
     public ForSaleAd createAd(ForSaleAd forSaleAd) {
         repository.save(forSaleAd);
         return forSaleAd;

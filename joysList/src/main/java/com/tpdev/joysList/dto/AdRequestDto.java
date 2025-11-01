@@ -42,5 +42,15 @@ public class AdRequestDto {
     private Gigs gigs;
     private PaymentStatus status;
 
+    // --- JobAd fields ---
+    private Boolean nonProfitOrganization;
+    private Boolean internship;
+    private Boolean telecommutingOk;
+    private EmploymentType employmentType;
+    private List<JobType> jobTypes;
+
+    // --- ServiceAd fields ---
+    private ServiceType serviceType;
+
     private LocalDateTime createdAt = LocalDateTime.now();
 }

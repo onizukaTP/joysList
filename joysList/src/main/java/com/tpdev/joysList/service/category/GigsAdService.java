@@ -26,6 +26,7 @@ public class GigsAdService extends BaseAdService<GigsAd> {
         this.repository = repository;
     }
 
+    @Override
     public GigsAd createAd(GigsAd gigsAd) {
         repository.save(gigsAd);
         return gigsAd;

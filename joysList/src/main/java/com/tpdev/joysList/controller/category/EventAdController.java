@@ -23,6 +23,7 @@ public class EventAdController extends BaseAdController<EventAd> {
     }
 
     @PostMapping
+    @Override
     public ResponseEntity<EventAd> createAd(@RequestBody EventAd eventAd) {
         service.createAd(eventAd);
         return new ResponseEntity<>(eventAd, HttpStatus.CREATED);

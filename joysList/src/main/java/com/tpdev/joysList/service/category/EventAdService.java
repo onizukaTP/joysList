@@ -20,6 +20,7 @@ public class EventAdService extends BaseAdService<EventAd> {
         this.eventAdRepository = eventAdRepository;
     }
 
+    @Override
     public EventAd createAd(EventAd eventAd) {
         eventAdRepository.save(eventAd);
         return eventAd;

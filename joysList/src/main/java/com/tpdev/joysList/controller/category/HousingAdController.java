@@ -26,6 +26,7 @@ public class HousingAdController extends BaseAdController<HousingAd> {
     }
 
     @PostMapping
+    @Override
     public ResponseEntity<HousingAd> createAd(@RequestBody HousingAd housingAd) {
         housingAdService.createAd(housingAd);
         return new ResponseEntity<>(housingAd, HttpStatus.CREATED);
