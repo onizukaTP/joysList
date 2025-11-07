@@ -6,15 +6,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Table(name = "user_roles")
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "users")
-public class UserEntity {
+@NoArgsConstructor
+public class RoleEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String username;
-    private String email;
-    private String password;
+
+    private String roleName;
 }
