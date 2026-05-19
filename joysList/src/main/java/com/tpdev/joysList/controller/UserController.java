@@ -3,7 +3,6 @@ package com.tpdev.joysList.controller;
 import com.tpdev.joysList.entity.UserEntity;
 import com.tpdev.joysList.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,11 +11,6 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService service;
-
-    @PostMapping
-    public ResponseEntity<UserEntity> createUser(@RequestBody UserEntity user) {
-        return new ResponseEntity<>(service.createUser(user), HttpStatus.CREATED);
-    }
 
     @GetMapping("/{id}")
     public ResponseEntity<UserEntity> getUserById(@PathVariable Long id) {
