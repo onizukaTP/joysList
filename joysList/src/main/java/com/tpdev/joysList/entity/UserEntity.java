@@ -1,5 +1,6 @@
 package com.tpdev.joysList.entity;
 
+import com.tpdev.joysList.entity.enums.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,4 +18,8 @@ public class UserEntity {
     private String username;
     private String email;
     private String password;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Role role = Role.USER;
 }
