@@ -33,6 +33,11 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(auth -> auth
 
+                        // Test endpoint
+                        .requestMatchers(
+                                "/hello/**"
+                        ).permitAll()
+
                         // Public APIs
                         .requestMatchers(
                                 "/api/v1/auth/**"
