@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class Ad {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String title;
     private String description;
@@ -29,5 +29,10 @@ public class Ad {
     @JoinColumn(name = "subcategory_id", nullable = false)
     @JsonBackReference("subcategory-ads")
     private Subcategory subcategory;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private UserEntity postedBy;
+
 
 }
