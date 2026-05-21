@@ -52,5 +52,18 @@ public class AdRequestDto {
     // --- ServiceAd fields ---
     private ServiceType serviceType;
 
+    // --- CommunityAd fields ---
+    private CommunityType communityType;
+    private LostAndFound lostOrFound;
+
+    // --- ResumeAd fields ---
+    private Boolean availableMornings;
+    private Boolean availableAfternoons;
+    private Boolean availableEvenings;
+    private Boolean availableOvernights;
+    private Boolean availableWeekdays;
+    private Boolean availableWeekends;
+    private EducationCompleted educationCompleted;
+
     private LocalDateTime createdAt = LocalDateTime.now();
 }
