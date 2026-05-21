@@ -8,6 +8,7 @@ import com.tpdev.joysList.entity.enums.Role;
 import com.tpdev.joysList.repo.UserRepository;
 import com.tpdev.joysList.security.JwtService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
+@Slf4j
 public class AuthController {
 
     private final AuthenticationManager authenticationManager;
@@ -29,6 +31,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login (@RequestBody LoginRequest request) {
+        log.info("Login request received: {}", request.getUsername());
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getUsername(),
@@ -38,6 +41,8 @@ public class AuthController {
 
         UserEntity user = userRepository.findByUsername(request.getUsername())
                 .orElseThrow();
+
+        log.info("User, {} logged in.", user.getUsername());
 
         String token = jwtService.generateToken(user);
 
@@ -60,6 +65,7 @@ public class AuthController {
         user.setRole(Role.USER);
 
         userRepository.save(user);
+        log.info("User: {} got created.", user.getUsername());
 
         String token = jwtService.generateToken(user);
 
