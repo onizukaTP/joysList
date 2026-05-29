@@ -1,10 +1,12 @@
 package com.tpdev.joysList.service;
 
+import com.tpdev.joysList.dto.AdCreatedEvent;
 import com.tpdev.joysList.dto.AdRequestDto;
 import com.tpdev.joysList.entity.Ad;
 import com.tpdev.joysList.entity.CustomUserDetails;
 import com.tpdev.joysList.entity.Subcategory;
 import com.tpdev.joysList.entity.UserEntity;
+import com.tpdev.joysList.kafka.producer.AdEventProducer;
 import com.tpdev.joysList.mapper.AdMapper;
 import com.tpdev.joysList.repo.AdRepository;
 import com.tpdev.joysList.repo.SubcategoryRepository;
@@ -37,6 +39,8 @@ public class AdFacadeService {
     private final SubcategoryRepository subcategoryRepository;
     private final AdRepository repository;
 
+    private AdEventProducer adEventProducer;
+
     @CacheEvict(value = "ads", allEntries = true)
     public Ad createAd(AdRequestDto dto) {
         Subcategory subcategory = subcategoryRepository.findById(dto.getSubcategoryId())
@@ -44,7 +48,7 @@ public class AdFacadeService {
 
         UserEntity currentUser = getCurrentUser();
 
-        return switch (dto.getAdType().toUpperCase()) {
+        Ad savedAd =  switch (dto.getAdType().toUpperCase()) {
             case "HOUSING"   -> housingAdService.createAd(mapper.toHousingAd(dto, subcategory, currentUser));
             case "FOR_SALE"  -> forSaleAdService.createAd(mapper.toForSaleAd(dto, subcategory, currentUser));
             case "EVENT"     -> eventAdService.createAd(mapper.toEventAd(dto, subcategory, currentUser));
@@ -55,6 +59,17 @@ public class AdFacadeService {
             case "COMMUNITY" -> communityAdService.createAd(mapper.toCommunityAd(dto, subcategory, currentUser));
             default -> throw new IllegalArgumentException("Unknown ad type: " + dto.getAdType());
         };
+
+        adEventProducer.publishAdCreated(
+                new AdCreatedEvent(
+                        savedAd.getId(),
+                        currentUser.getId(),
+                        savedAd.getTitle(),
+                        savedAd.getSubcategory().getName()
+                )
+        );
+
+        return savedAd;
     }
 
     @CacheEvict(value = "ads", allEntries = true)
