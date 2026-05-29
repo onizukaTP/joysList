@@ -60,6 +60,8 @@ public class AdFacadeService {
             default -> throw new IllegalArgumentException("Unknown ad type: " + dto.getAdType());
         };
 
+        log.info("Ad created by user {} under category {}", currentUser.getUsername(), savedAd.getSubcategory().getName());
+
         adEventProducer.publishAdCreated(
                 new AdCreatedEvent(
                         savedAd.getId(),
@@ -74,14 +76,17 @@ public class AdFacadeService {
 
     @CacheEvict(value = "ads", allEntries = true)
     public List<Ad> createMultipleAds(List<AdRequestDto> dto) {
+        int adCount = 1;
         List<Ad> adList = new ArrayList<>();
         for (AdRequestDto ad : dto) {
             adList.add(createAd(ad));
+            adCount++;
         }
+        log.info("{} number of Ads created", adCount);
         return adList;
     }
 
-    public List<Ad> search(String title) {
+    public List<Ad> searchAdByTitle(String title) {
         return repository.findByTitleContainingIgnoreCase(title);
     }
 

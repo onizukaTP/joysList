@@ -2,10 +2,6 @@ package com.tpdev.joysList.controller;
 
 import com.tpdev.joysList.dto.AdRequestDto;
 import com.tpdev.joysList.entity.Ad;
-import com.tpdev.joysList.entity.Subcategory;
-import com.tpdev.joysList.mapper.AdMapper;
-import com.tpdev.joysList.repo.SubcategoryRepository;
-import com.tpdev.joysList.repo.AdRepository;
 import com.tpdev.joysList.service.AdFacadeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -47,7 +43,7 @@ public class AdController {
     @GetMapping("/search")
     public ResponseEntity<List<Ad>> search(@RequestParam(required = false) String title) {
         log.info("GET /ads/search endpoint called");
-        List<Ad> ads = adFacadeService.search(title);
+        List<Ad> ads = adFacadeService.searchAdByTitle(title);
         if (ads.isEmpty())
             return new ResponseEntity<>(ads, HttpStatus.NOT_FOUND);
         return ResponseEntity.ok(ads);
