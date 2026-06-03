@@ -6,6 +6,7 @@ import com.tpdev.joysList.entity.Ad;
 import com.tpdev.joysList.entity.CustomUserDetails;
 import com.tpdev.joysList.entity.Subcategory;
 import com.tpdev.joysList.entity.UserEntity;
+import com.tpdev.joysList.exception.ResourceNotFound;
 import com.tpdev.joysList.kafka.producer.AdEventProducer;
 import com.tpdev.joysList.mapper.AdMapper;
 import com.tpdev.joysList.repo.AdRepository;
@@ -52,11 +53,13 @@ public class AdFacadeService {
                         .toList());
 
         Subcategory subcategory = subcategoryRepository.findById(dto.getSubcategoryId())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid subcategory ID"));
+                .orElseThrow(() -> new ResourceNotFound(
+                        "Subcategory not found" + dto.getSubcategoryId()
+                ));
 
         // validating subcategory
-        if (subcategory.getCategory().getName() != dto.getAdType()) {
-            throw new IllegalArgumentException(
+        if (subcategory.getCategory().getName().equals(dto.getAdType())) {
+            throw new ResourceNotFound(
                     "Subcategory does not belong to selected category");
         }
 

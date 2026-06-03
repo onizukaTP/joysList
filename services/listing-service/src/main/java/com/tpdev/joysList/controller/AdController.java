@@ -3,6 +3,7 @@ package com.tpdev.joysList.controller;
 import com.tpdev.joysList.dto.AdRequestDto;
 import com.tpdev.joysList.entity.Ad;
 import com.tpdev.joysList.service.AdFacadeService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -20,7 +21,7 @@ public class AdController {
     private final AdFacadeService adFacadeService;
 
     @PostMapping
-    public ResponseEntity<String> createAd(@RequestBody AdRequestDto dto) {
+    public ResponseEntity<String> createAd(@Valid @RequestBody AdRequestDto dto) {
         log.info("POST /ads endpoint called");
         Ad createdAd = adFacadeService.createAd(dto);
         return new ResponseEntity<>("Ad created successfully as " + dto.getAdType(), HttpStatus.CREATED);
