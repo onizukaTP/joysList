@@ -39,25 +39,53 @@ public class AdFacadeService {
     private final SubcategoryRepository subcategoryRepository;
     private final AdRepository repository;
 
-    private AdEventProducer adEventProducer;
+    private final AdEventProducer adEventProducer;
 
     @CacheEvict(value = "ads", allEntries = true)
     public Ad createAd(AdRequestDto dto) {
+
+        log.info("Incoming subcategoryId={}", dto.getSubcategoryId());
+        log.info("Existing subcategories={}",
+                subcategoryRepository.findAll()
+                        .stream()
+                        .map(Subcategory::getId)
+                        .toList());
+
         Subcategory subcategory = subcategoryRepository.findById(dto.getSubcategoryId())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid subcategory ID"));
 
+        // validating subcategory
+        if (subcategory.getCategory().getName() != dto.getAdType()) {
+            throw new IllegalArgumentException(
+                    "Subcategory does not belong to selected category");
+        }
+
         UserEntity currentUser = getCurrentUser();
 
-        Ad savedAd =  switch (dto.getAdType().toUpperCase()) {
-            case "HOUSING"   -> housingAdService.createAd(mapper.toHousingAd(dto, subcategory, currentUser));
-            case "FOR_SALE"  -> forSaleAdService.createAd(mapper.toForSaleAd(dto, subcategory, currentUser));
-            case "EVENT"     -> eventAdService.createAd(mapper.toEventAd(dto, subcategory, currentUser));
-            case "GIGS"      -> gigsAdService.createAd(mapper.toGigsAd(dto, subcategory, currentUser));
-            case "JOBS"      -> jobAdService.createAd(mapper.toJobAd(dto, subcategory, currentUser));
-            case "RESUME"    -> resumeAdService.createAd(mapper.toResumeAd(dto, subcategory, currentUser));
-            case "SERVICE"   -> serviceAdService.createAd(mapper.toServiceAd(dto, subcategory, currentUser));
-            case "COMMUNITY" -> communityAdService.createAd(mapper.toCommunityAd(dto, subcategory, currentUser));
-            default -> throw new IllegalArgumentException("Unknown ad type: " + dto.getAdType());
+        Ad savedAd = switch (dto.getAdType()) {
+            case HOUSING  -> housingAdService.createAd(
+                    mapper.toHousingAd(dto, subcategory, currentUser));
+
+            case FOR_SALE -> forSaleAdService.createAd(
+                    mapper.toForSaleAd(dto, subcategory, currentUser));
+
+            case EVENTS   -> eventAdService.createAd(
+                    mapper.toEventAd(dto, subcategory, currentUser));
+
+            case GIGS     -> gigsAdService.createAd(
+                    mapper.toGigsAd(dto, subcategory, currentUser));
+
+            case JOBS     -> jobAdService.createAd(
+                    mapper.toJobAd(dto, subcategory, currentUser));
+
+            case RESUMES  -> resumeAdService.createAd(
+                    mapper.toResumeAd(dto, subcategory, currentUser));
+
+            case SERVICES -> serviceAdService.createAd(
+                    mapper.toServiceAd(dto, subcategory, currentUser));
+
+            case COMMUNITY -> communityAdService.createAd(
+                    mapper.toCommunityAd(dto, subcategory, currentUser));
         };
 
         log.info("Ad created by user {} under category {}", currentUser.getUsername(), savedAd.getSubcategory().getName());
