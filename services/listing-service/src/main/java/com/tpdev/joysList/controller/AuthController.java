@@ -54,6 +54,14 @@ public class AuthController {
             @RequestBody RegisterRequest request
     ) {
 
+        if (userRepository.existsByUsername(request.getUsername())) {
+            throw new IllegalArgumentException("Username already exists");
+        }
+
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new IllegalArgumentException("Email already exists");
+        }
+
         UserEntity user = new UserEntity();
 
         user.setUsername(request.getUsername());
