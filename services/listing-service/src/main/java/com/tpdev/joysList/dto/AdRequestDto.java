@@ -7,7 +7,7 @@ import java.util.List;
 
 @Data
 public class AdRequestDto {
-    private String adType; // "HOUSING", "FOR_SALE", "EVENT", "GIGS"
+    private AdType adType;
 
     // --- Common Ad fields ---
     private String title;

@@ -1,6 +1,7 @@
 package com.tpdev.joysList.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.tpdev.joysList.entity.enums.AdType;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -15,7 +16,10 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, unique = true)
+    private AdType name;
+
     private String description;
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
