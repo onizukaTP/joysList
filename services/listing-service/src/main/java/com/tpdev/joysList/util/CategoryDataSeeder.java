@@ -11,6 +11,7 @@ import com.tpdev.joysList.repo.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -19,17 +20,13 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 @Transactional
 @Slf4j
-public class DataSeeder implements CommandLineRunner {
+public class CategoryDataSeeder implements CommandLineRunner {
 
     private final CategoryRepository categoryRepository;
     private final SubcategoryRepository subcategoryRepository;
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
 
     @Override
     public void run(String... args) {
-
-        seedAdminUser();
 
         if (categoryRepository.count() > 0) {
             log.info("Seed data already exists. Skipping initialization.");
@@ -155,28 +152,4 @@ public class DataSeeder implements CommandLineRunner {
         subcategoryRepository.save(subcategory);
     }
 
-    private void seedAdminUser() {
-
-        String adminEmail = "admin@joyslist.com";
-
-        if (userRepository.findByEmail(adminEmail) != null) {
-            log.info("Admin user already exists.");
-            return;
-        }
-
-        UserEntity admin = new UserEntity();
-
-        admin.setUsername("admin");
-        admin.setEmail(adminEmail);
-
-        admin.setPassword(
-                passwordEncoder.encode("Admin@123")
-        );
-
-        admin.setRole(Role.ADMIN);
-
-        userRepository.save(admin);
-
-        log.info("Default admin user created.");
-    }
 }
