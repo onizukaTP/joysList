@@ -1,14 +1,18 @@
-package com.tpdev.joysList.seed;
+package com.tpdev.joysList.util;
 
 import com.tpdev.joysList.entity.Category;
 import com.tpdev.joysList.entity.Subcategory;
+import com.tpdev.joysList.entity.UserEntity;
 import com.tpdev.joysList.entity.enums.AdType;
+import com.tpdev.joysList.entity.enums.Role;
 import com.tpdev.joysList.repo.CategoryRepository;
 import com.tpdev.joysList.repo.SubcategoryRepository;
+import com.tpdev.joysList.repo.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -19,9 +23,13 @@ public class DataSeeder implements CommandLineRunner {
 
     private final CategoryRepository categoryRepository;
     private final SubcategoryRepository subcategoryRepository;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public void run(String... args) {
+
+        seedAdminUser();
 
         if (categoryRepository.count() > 0) {
             log.info("Seed data already exists. Skipping initialization.");
@@ -128,7 +136,7 @@ public class DataSeeder implements CommandLineRunner {
             String description) {
 
         Category category = new Category();
-        category.setAdType(adType);
+        category.setName(adType);
         category.setDescription(description);
 
         return categoryRepository.save(category);
@@ -145,5 +153,30 @@ public class DataSeeder implements CommandLineRunner {
         subcategory.setDescription(description);
 
         subcategoryRepository.save(subcategory);
+    }
+
+    private void seedAdminUser() {
+
+        String adminEmail = "admin@joyslist.com";
+
+        if (userRepository.findByEmail(adminEmail) != null) {
+            log.info("Admin user already exists.");
+            return;
+        }
+
+        UserEntity admin = new UserEntity();
+
+        admin.setUsername("admin");
+        admin.setEmail(adminEmail);
+
+        admin.setPassword(
+                passwordEncoder.encode("Admin@123")
+        );
+
+        admin.setRole(Role.ADMIN);
+
+        userRepository.save(admin);
+
+        log.info("Default admin user created.");
     }
 }
