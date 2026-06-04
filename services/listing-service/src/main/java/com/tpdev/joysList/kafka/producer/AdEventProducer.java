@@ -1,6 +1,6 @@
 package com.tpdev.joysList.kafka.producer;
 
-import com.tpdev.joysList.dto.AdCreatedEvent;
+import com.tpdev.events.AdCreatedEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;

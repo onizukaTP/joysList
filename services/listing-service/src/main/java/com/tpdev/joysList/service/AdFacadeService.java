@@ -1,6 +1,6 @@
 package com.tpdev.joysList.service;
 
-import com.tpdev.joysList.dto.AdCreatedEvent;
+import com.tpdev.events.AdCreatedEvent;
 import com.tpdev.joysList.dto.AdRequestDto;
 import com.tpdev.joysList.entity.Ad;
 import com.tpdev.joysList.entity.CustomUserDetails;
