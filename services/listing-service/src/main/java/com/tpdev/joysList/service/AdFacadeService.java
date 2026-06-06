@@ -58,7 +58,7 @@ public class AdFacadeService {
                 ));
 
         // validating subcategory
-        if (subcategory.getCategory().getName().equals(dto.getAdType())) {
+        if (!subcategory.getCategory().getName().equals(dto.getAdType())) {
             throw new ResourceNotFound(
                     "Subcategory does not belong to selected category");
         }
@@ -101,6 +101,7 @@ public class AdFacadeService {
                         savedAd.getSubcategory().getName()
                 )
         );
+        log.info("Ad Event published...");
 
         return savedAd;
     }
