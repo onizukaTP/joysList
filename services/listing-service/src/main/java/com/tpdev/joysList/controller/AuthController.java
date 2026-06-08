@@ -1,10 +1,12 @@
 package com.tpdev.joysList.controller;
 
+import com.tpdev.events.UserRegisteredEvent;
 import com.tpdev.joysList.dto.AuthResponse;
 import com.tpdev.joysList.dto.LoginRequest;
 import com.tpdev.joysList.dto.RegisterRequest;
 import com.tpdev.joysList.entity.UserEntity;
 import com.tpdev.joysList.entity.enums.Role;
+import com.tpdev.joysList.kafka.producer.UserEventProducer;
 import com.tpdev.joysList.repo.UserRepository;
 import com.tpdev.joysList.security.JwtService;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +30,8 @@ public class AuthController {
     private final JwtService jwtService;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+
+    private final UserEventProducer userEventProducer;
 
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login (@RequestBody LoginRequest request) {
@@ -74,6 +78,15 @@ public class AuthController {
 
         userRepository.save(user);
         log.info("User: {} got created.", user.getUsername());
+
+        userEventProducer.publishUserRegistered(
+                new UserRegisteredEvent(
+                        user.getId(),
+                        user.getEmail(),
+                        user.getUsername()
+                )
+        );
+        log.info("Published User Registered Event");
 
         String token = jwtService.generateToken(user);
 
