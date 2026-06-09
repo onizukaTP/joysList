@@ -15,6 +15,7 @@
         <module>shared/common-events</module>
         <module>services/listing-service</module>
         <module>services/notification-service</module>
+        <module>services/api-gateway</module>
     </modules>
 
 </project>
