@@ -2,6 +2,7 @@ package com.tpdev.joysList.service;
 
 import com.tpdev.events.AdCreatedEvent;
 import com.tpdev.joysList.dto.AdRequestDto;
+import com.tpdev.joysList.dto.AdResponse;
 import com.tpdev.joysList.entity.Ad;
 import com.tpdev.joysList.entity.CustomUserDetails;
 import com.tpdev.joysList.entity.Subcategory;
@@ -123,9 +124,12 @@ public class AdFacadeService {
     }
 
     @Cacheable(value = "ads")
-    public List<Ad> getAll() {
+    public List<AdResponse> getAll() {
         log.info("Fetching ads from DB...");
-        return repository.findAll();
+        return repository.findAll()
+                .stream()
+                .map(this::toResponse)
+                .toList();
     }
 
     // Pulls the logged-in user out of the security context.
@@ -136,5 +140,18 @@ public class AdFacadeService {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails userDetails = (CustomUserDetails) auth.getPrincipal();
         return userDetails.getUser();
+    }
+
+    // helper function to map Ad to AdResponse
+    private AdResponse toResponse(Ad ad) {
+        return new AdResponse(
+                ad.getId(),
+                ad.getTitle(),
+                ad.getDescription(),
+                ad.getPrice(),
+                ad.getLocation(),
+                ad.getSubcategory().getName(),
+                ad.getPostedBy().getId()
+        );
     }
 }
