@@ -26,6 +26,6 @@ public class NotificationService {
 
     public void handleUserRegistered(UserRegisteredEvent event) {
         log.debug("RECEIVED USER EVENT: {}", event);
-        emailService.sendUserRegisteredEmail(event);
+        emailService.sendWelcomeEmail(event);
     }
 }
