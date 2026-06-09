@@ -1,5 +1,17 @@
 services:
 
+  api-gateway:
+    build:
+      context: ../services/api-gateway
+
+    container_name: joyslist-api-gateway
+
+    ports:
+      - "8080:8080"
+
+    depends_on:
+      - listing-service
+
   # ==================================================
   # PostgreSQL
   # ==================================================
@@ -78,7 +90,7 @@ services:
     build:
       context: ../services/listing-service
 
-    container_name: joyslist-app
+    container_name: joyslist-listing-service
 
     depends_on:
       postgres:
@@ -91,7 +103,7 @@ services:
         condition: service_started
 
     ports:
-      - "8080:8080"
+      - "8081:8081"
 
     environment:
 
@@ -127,12 +139,22 @@ services:
 
     container_name: joyslist-notification-service
 
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
+
+    ports:
+      - "8082:8082"
+
     depends_on:
       kafka:
         condition: service_started
 
     environment:
       KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+
+      MAIL_USERNAME: ${MAIL_USERNAME}
+      MAIL_PASSWORD: ${MAIL_PASSWORD}
 
     restart: unless-stopped
 
