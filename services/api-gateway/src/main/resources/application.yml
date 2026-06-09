@@ -1,0 +1,17 @@
+server:
+  port:8080
+
+spring:
+  cloud:
+    gateway:
+      routes:
+
+        - id: listing-service
+          uri: http://listing-service:8081
+          predicates:
+            - Path=/api/v1/**
+
+        - id: notification-service
+          uri: http://notification-service:8082
+          predicates:
+              - Path=/test/**
