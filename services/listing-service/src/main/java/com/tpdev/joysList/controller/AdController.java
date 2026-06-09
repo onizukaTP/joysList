@@ -1,6 +1,7 @@
 package com.tpdev.joysList.controller;
 
 import com.tpdev.joysList.dto.AdRequestDto;
+import com.tpdev.joysList.dto.AdResponse;
 import com.tpdev.joysList.entity.Ad;
 import com.tpdev.joysList.service.AdFacadeService;
 import jakarta.validation.Valid;
@@ -35,10 +36,11 @@ public class AdController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Ad>> getAll() {
+    public ResponseEntity<List<AdResponse>> getAll() {
         log.info("GET /ads endpoint called");
-        List<Ad> ads = adFacadeService.getAll();
-        return ResponseEntity.ok(ads);
+        return ResponseEntity.ok(
+                adFacadeService.getAll()
+        );
     }
 
     @GetMapping("/search")
