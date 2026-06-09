@@ -15,10 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -82,8 +79,8 @@ public class AuthController {
         userEventProducer.publishUserRegistered(
                 new UserRegisteredEvent(
                         user.getId(),
-                        user.getEmail(),
-                        user.getUsername()
+                        user.getUsername(),
+                        user.getEmail()
                 )
         );
         log.info("Published User Registered Event");
@@ -93,5 +90,11 @@ public class AuthController {
         return ResponseEntity.ok(
                 new AuthResponse(token)
         );
+    }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<String> deleteUser(@RequestBody UserEntity userEntity) {
+        userRepository.delete(userEntity);
+        return ResponseEntity.ok("Successfully deleted " + userEntity.getUsername());
     }
 }
