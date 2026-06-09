@@ -35,7 +35,7 @@ public class SecurityConfig {
 
                         // Test endpoint
                         .requestMatchers(
-                                "/hello/**"
+                                "/hello/**", "/test/**"
                         ).permitAll()
 
                         // Public APIs
