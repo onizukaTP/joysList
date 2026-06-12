@@ -1,6 +1,7 @@
 package com.tpdev.joysList.service;
 
 import com.tpdev.events.AdCreatedEvent;
+import com.tpdev.events.AdDeletedEvent;
 import com.tpdev.joysList.dto.AdRequestDto;
 import com.tpdev.joysList.dto.AdResponse;
 import com.tpdev.joysList.entity.Ad;
@@ -130,6 +131,37 @@ public class AdFacadeService {
                 .stream()
                 .map(this::toResponse)
                 .toList();
+    }
+
+    @CacheEvict(value = "ads", allEntries = true)
+    public Ad updateAd(Long id, AdRequestDto dto) {
+        Ad existingAd = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFound("Ad not found with id: " + id));
+
+        existingAd.setTitle(dto.getTitle());
+        existingAd.setDescription(dto.getDescription());
+        existingAd.setPrice(dto.getPrice());
+        existingAd.setLocation(dto.getLocation());
+
+        log.info("Ad {} updated by user {}", id, getCurrentUser().getUsername());
+        return repository.save(existingAd);
+    }
+
+    @CacheEvict(value = "ads", allEntries = true)
+    public void deleteAd(Long id) {
+        Ad ad = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFound("Ad not found with id: " + id));
+
+        repository.deleteById(id);
+        log.info("Ad {} deleted by user {}", id, getCurrentUser().getUsername());
+
+        adEventProducer.publishAdDeleted(
+                new AdDeletedEvent(
+                        ad.getId(),
+                        getCurrentUser().getId()
+                )
+        );
+        log.info("Ad Deleted Event published for adId={}", id);
     }
 
     // Pulls the logged-in user out of the security context.

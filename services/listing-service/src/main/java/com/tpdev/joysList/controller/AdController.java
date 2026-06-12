@@ -51,5 +51,21 @@ public class AdController {
             return new ResponseEntity<>(ads, HttpStatus.NOT_FOUND);
         return ResponseEntity.ok(ads);
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<String> updateAd(
+            @PathVariable Long id,
+            @Valid @RequestBody AdRequestDto dto) {
+        log.info("PUT /ads/{} endpoint called", id);
+        adFacadeService.updateAd(id, dto);
+        return ResponseEntity.ok("Ad " + id + " updated successfully");
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteAd(@PathVariable Long id) {
+        log.info("DELETE /ads/{} endpoint called", id);
+        adFacadeService.deleteAd(id);
+        return ResponseEntity.ok("Ad " + id + " deleted successfully");
+    }
 }
 
