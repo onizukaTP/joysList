@@ -8,16 +8,21 @@ import com.tpdev.joysList.entity.Ad;
 import com.tpdev.joysList.entity.CustomUserDetails;
 import com.tpdev.joysList.entity.Subcategory;
 import com.tpdev.joysList.entity.UserEntity;
+import com.tpdev.joysList.entity.enums.AdType;
 import com.tpdev.joysList.exception.ResourceNotFound;
 import com.tpdev.joysList.kafka.producer.AdEventProducer;
 import com.tpdev.joysList.mapper.AdMapper;
 import com.tpdev.joysList.repo.AdRepository;
 import com.tpdev.joysList.repo.SubcategoryRepository;
 import com.tpdev.joysList.service.category.*;
+import com.tpdev.joysList.specification.AdSpecification;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -120,8 +125,30 @@ public class AdFacadeService {
         return adList;
     }
 
-    public List<Ad> searchAdByTitle(String title) {
-        return repository.findByTitleContainingIgnoreCase(title);
+    public Page<AdResponse> search(
+            String keyword,
+            String location,
+            Double minPrice,
+            Double maxPrice,
+            Boolean isFree,
+            Boolean deliveryAvailable,
+            Boolean postedToday,
+            AdType category,
+            Pageable pageable) {
+
+        Specification<Ad> spec = Specification.allOf(
+                AdSpecification.keywordMatches(keyword),
+                AdSpecification.locationMatches(location),
+                AdSpecification.minPrice(minPrice),
+                AdSpecification.maxPrice(maxPrice),
+                AdSpecification.isFree(isFree),
+                AdSpecification.hasDelivery(deliveryAvailable),
+                AdSpecification.postedToday(postedToday),
+                AdSpecification.inCategory(category)
+        );
+
+        return repository.findAll(spec, pageable)
+                .map(this::toResponse);
     }
 
     @Cacheable(value = "ads")
@@ -158,7 +185,8 @@ public class AdFacadeService {
         adEventProducer.publishAdDeleted(
                 new AdDeletedEvent(
                         ad.getId(),
-                        getCurrentUser().getId()
+                        getCurrentUser().getId(),
+                        ad.getTitle()
                 )
         );
         log.info("Ad Deleted Event published for adId={}", id);

@@ -3,10 +3,15 @@ package com.tpdev.joysList.controller;
 import com.tpdev.joysList.dto.AdRequestDto;
 import com.tpdev.joysList.dto.AdResponse;
 import com.tpdev.joysList.entity.Ad;
+import com.tpdev.joysList.entity.enums.AdType;
 import com.tpdev.joysList.service.AdFacadeService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -44,12 +49,34 @@ public class AdController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<Ad>> search(@RequestParam(required = false) String title) {
-        log.info("GET /ads/search endpoint called");
-        List<Ad> ads = adFacadeService.searchAdByTitle(title);
-        if (ads.isEmpty())
-            return new ResponseEntity<>(ads, HttpStatus.NOT_FOUND);
-        return ResponseEntity.ok(ads);
+    public ResponseEntity<Page<AdResponse>> search(
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) String location,
+            @RequestParam(required = false) Double minPrice,
+            @RequestParam(required = false) Double maxPrice,
+            @RequestParam(required = false) Boolean isFree,
+            @RequestParam(required = false) Boolean deliveryAvailable,
+            @RequestParam(required = false) Boolean postedToday,
+            @RequestParam(required = false) AdType category,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(defaultValue = "createdAt") String sortBy,
+            @RequestParam(defaultValue = "desc") String sortDir) {
+
+        log.info("GET /ads/search called");
+
+        Pageable pageable = PageRequest.of(
+                page, size,
+                sortDir.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending()
+                        : Sort.by(sortBy).descending()
+        );
+
+        Page<AdResponse> results = adFacadeService.search(
+                keyword, location, minPrice, maxPrice,
+                isFree, deliveryAvailable, postedToday, category, pageable
+        );
+
+        return ResponseEntity.ok(results);
     }
 
     @PutMapping("/{id}")
