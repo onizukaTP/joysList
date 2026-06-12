@@ -9,9 +9,18 @@ import org.springframework.kafka.config.TopicBuilder;
 public class KafkaTopicConfig {
 
     @Bean
-    public NewTopic adEventsTopic() {
+    public NewTopic adCreatedEventsTopic() {
         return TopicBuilder
-                .name("ad-events")
+                .name("ad-created-events")
+                .partitions(3)
+                .replicas(1)
+                .build();
+    }
+
+    @Bean
+    public NewTopic adDeletedEventsTopic() {
+        return TopicBuilder
+                .name("ad-deleted-events")
                 .partitions(3)
                 .replicas(1)
                 .build();
