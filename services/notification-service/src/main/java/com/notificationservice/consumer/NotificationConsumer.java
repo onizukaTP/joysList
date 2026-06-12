@@ -23,7 +23,7 @@ public class NotificationConsumer {
     }
 
     @KafkaListener(
-            topics = "ad-events",
+            topics = "ad-created-events",
             groupId = "notification-group"
     )
     public void handleAdCreated(AdCreatedEvent event) {
@@ -31,7 +31,7 @@ public class NotificationConsumer {
     }
 
     @KafkaListener(
-            topics = "ad-events",
+            topics = "ad-deleted-events",
             groupId = "notification-group"
     )
     public void handleAdDeleted(AdDeletedEvent event) {
