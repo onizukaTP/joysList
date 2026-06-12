@@ -20,11 +20,43 @@ public class EmailService {
     private final JavaMailSender mailSender;
 
     public void sendAdCreatedEmail(AdCreatedEvent event) {
-        log.info("Email sent for creation event for ad {}", event.getTitle());
+        SimpleMailMessage mail = new SimpleMailMessage();
+        mail.setFrom(from);
+        mail.setTo(from); // temporary — replace with user's email once user-service exists
+        mail.setSubject("Your ad is live on JoysList!");
+        mail.setText(
+                "Hi " + event.getUserId() + ",\n\n" +
+                        "Your ad \"" + event.getTitle() + "\" has been posted successfully " +
+                        "under " + event.getCategory() + ".\n\n" +
+                        "Thanks for using JoysList!"
+        );
+
+        try {
+            mailSender.send(mail);
+            log.info("Ad created email sent for adId={}", event.getAdId());
+        } catch (MailException e) {
+            log.error("Failed to send ad created email for adId={}: {}", event.getAdId(), e.getMessage());
+        }
     }
 
     public void sendAdDeletedEmail(AdDeletedEvent event) {
-        log.info("Email send for deletion event for ad {}", event.getTitle());
+        SimpleMailMessage mail = new SimpleMailMessage();
+        mail.setFrom(from);
+        mail.setTo(from); // same placeholder as AdCreated — replace with user email later
+        mail.setSubject("Your ad has been removed from JoysList");
+        mail.setText(
+                "Hi,\n\n" +
+                        "Your ad (ID: " + event.getAdId() + ") has been successfully removed.\n\n" +
+                        "If you didn't do this, please contact support.\n\n" +
+                        "— JoysList Team"
+        );
+
+        try {
+            mailSender.send(mail);
+            log.info("Ad deleted email sent for adId={}", event.getAdId());
+        } catch (MailException e) {
+            log.error("Failed to send ad deleted email for adId={}: {}", event.getAdId(), e.getMessage());
+        }
     }
 
     // just for logs
