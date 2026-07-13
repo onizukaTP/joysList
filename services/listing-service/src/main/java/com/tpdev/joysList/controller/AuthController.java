@@ -1,6 +1,7 @@
 package com.tpdev.joysList.controller;
 
 import com.tpdev.events.UserRegisteredEvent;
+import com.tpdev.joysList.constants.ApiConstants;
 import com.tpdev.joysList.dto.AuthResponse;
 import com.tpdev.joysList.dto.LoginRequest;
 import com.tpdev.joysList.dto.RegisterRequest;
@@ -18,7 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/auth")
+@RequestMapping(ApiConstants.AUTH)
 @RequiredArgsConstructor
 @Slf4j
 public class AuthController {
@@ -30,7 +31,7 @@ public class AuthController {
 
     private final UserEventProducer userEventProducer;
 
-    @PostMapping("/login")
+    @PostMapping(ApiConstants.LOGIN)
     public ResponseEntity<AuthResponse> login (@RequestBody LoginRequest request) {
         log.info("Login request received: {}", request.getUsername());
         authenticationManager.authenticate(
@@ -50,7 +51,7 @@ public class AuthController {
         return ResponseEntity.ok(new AuthResponse(token));
     }
 
-    @PostMapping("/register")
+    @PostMapping(ApiConstants.REGISTER_USER)
     public ResponseEntity<AuthResponse> register(
             @RequestBody RegisterRequest request
     ) {
@@ -63,15 +64,7 @@ public class AuthController {
             throw new IllegalArgumentException("Email already exists");
         }
 
-        UserEntity user = new UserEntity();
-
-        user.setUsername(request.getUsername());
-        user.setEmail(request.getEmail());
-        user.setPassword(
-                passwordEncoder.encode(request.getPassword())
-        );
-
-        user.setRole(Role.USER);
+        UserEntity user = getUserEntity(request);
 
         userRepository.save(user);
         log.info("User: {} got created.", user.getUsername());
@@ -92,7 +85,20 @@ public class AuthController {
         );
     }
 
-    @DeleteMapping("/delete")
+    private UserEntity getUserEntity(RegisterRequest request) {
+        UserEntity user = new UserEntity();
+
+        user.setUsername(request.getUsername());
+        user.setEmail(request.getEmail());
+        user.setPassword(
+                passwordEncoder.encode(request.getPassword())
+        );
+
+        user.setRole(Role.USER);
+        return user;
+    }
+
+    @DeleteMapping(ApiConstants.DELETE_USER)
     public ResponseEntity<String> deleteUser(@RequestBody UserEntity userEntity) {
         userRepository.delete(userEntity);
         return ResponseEntity.ok("Successfully deleted " + userEntity.getUsername());

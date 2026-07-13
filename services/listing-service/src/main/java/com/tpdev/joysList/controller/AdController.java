@@ -1,5 +1,6 @@
 package com.tpdev.joysList.controller;
 
+import com.tpdev.joysList.constants.ApiConstants;
 import com.tpdev.joysList.dto.AdRequestDto;
 import com.tpdev.joysList.dto.AdResponse;
 import com.tpdev.joysList.entity.Ad;
@@ -19,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/ads")
+@RequestMapping(ApiConstants.ADS)
 @RequiredArgsConstructor
 @Slf4j
 public class AdController {
@@ -33,7 +34,7 @@ public class AdController {
         return new ResponseEntity<>("Ad created successfully as " + dto.getAdType(), HttpStatus.CREATED);
     }
 
-    @PostMapping("/list")
+    @PostMapping(ApiConstants.LIST)
     public ResponseEntity<String> createMultipleAds(@RequestBody List<AdRequestDto> dto) {
         log.info("POST /ads/list endpoint called");
         List<Ad> ads = adFacadeService.createMultipleAds(dto);
@@ -48,7 +49,7 @@ public class AdController {
         );
     }
 
-    @GetMapping("/search")
+    @GetMapping(ApiConstants.SEARCH)
     public ResponseEntity<Page<AdResponse>> search(
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) String location,
@@ -79,7 +80,7 @@ public class AdController {
         return ResponseEntity.ok(results);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(ApiConstants.ID)
     public ResponseEntity<String> updateAd(
             @PathVariable Long id,
             @Valid @RequestBody AdRequestDto dto) {
@@ -88,7 +89,7 @@ public class AdController {
         return ResponseEntity.ok("Ad " + id + " updated successfully");
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(ApiConstants.ID)
     public ResponseEntity<String> deleteAd(@PathVariable Long id) {
         log.info("DELETE /ads/{} endpoint called", id);
         adFacadeService.deleteAd(id);
