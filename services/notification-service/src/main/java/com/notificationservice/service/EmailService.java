@@ -105,4 +105,8 @@ public class EmailService {
             log.error("Error Sending Mail: {}", e.getMessage(), e);
         }
     }
+
+    public void sendWelcomeEmail(String name, String mail) {
+
+    }
 }

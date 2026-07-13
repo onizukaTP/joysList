@@ -5,10 +5,13 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Ad {
@@ -34,5 +37,6 @@ public class Ad {
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity postedBy;
 
-
+    @OneToMany(mappedBy = "ad", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<AdImage> images = new ArrayList<>();
 }

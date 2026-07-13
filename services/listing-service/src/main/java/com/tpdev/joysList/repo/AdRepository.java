@@ -10,4 +10,5 @@ import java.util.List;
 
 @Repository
 public interface AdRepository extends JpaRepository<Ad, Long>, JpaSpecificationExecutor<Ad> {
+    List<Ad> findByTitleContainingIgnoreCase(String title);
 }

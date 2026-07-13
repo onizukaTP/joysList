@@ -10,6 +10,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class SubcategoryService {
+
     private final SubcategoryRepository repository;
 
     public List<Subcategory> getSubcategoriesByCategory(Long categoryId) {

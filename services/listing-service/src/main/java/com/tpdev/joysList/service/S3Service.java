@@ -1,0 +1,73 @@
+package com.tpdev.joysList.service;
+
+import org.springframework.beans.factory.annotation.Value;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+import software.amazon.awssdk.core.sync.RequestBody;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+
+import java.io.IOException;
+import java.util.UUID;
+
+@Slf4j
+@Service
+@Profile("dev")
+public class S3Service {
+
+    private final S3Client s3Client;
+    private final String bucketName;
+
+    public S3Service(
+            @Value("${aws.accessKeyId}") String accessKey,
+            @Value("${aws.secretAccessKey}") String secretKey,
+            @Value("${aws.s3.region}") String region,
+            @Value("${aws.s3.bucket}") String bucketName
+    ) {
+        this.bucketName = bucketName;
+        this.s3Client = S3Client.builder()
+                .region(Region.of(region))
+                .credentialsProvider(StaticCredentialsProvider.create(
+                        AwsBasicCredentials.create(accessKey, secretKey)
+                ))
+                .build();
+    }
+
+    public String upload(MultipartFile file, Long adId) throws IOException {
+        String extension = getExtension(file.getOriginalFilename());
+        String key = "ads/" + adId + "/" + UUID.randomUUID() + extension;
+
+        PutObjectRequest request = PutObjectRequest.builder()
+                .bucket(bucketName)
+                .key(key)
+                .contentType(file.getContentType())
+                .build();
+
+        s3Client.putObject(request, RequestBody.fromBytes(file.getBytes()));
+
+        String url = "https://" + bucketName + ".s3.amazonaws.com/" + key;
+        log.info("Uploaded image to S3: {}", url);
+        return url;
+    }
+
+    public void delete(String s3Key) {
+        DeleteObjectRequest request = DeleteObjectRequest.builder()
+                .bucket(bucketName)
+                .key(s3Key)
+                .build();
+
+        s3Client.deleteObject(request);
+        log.info("Deleted image from S3: {}", s3Key);
+    }
+
+    private String getExtension(String filename) {
+        if (filename == null || !filename.contains(".")) return ".jpg";
+        return filename.substring(filename.lastIndexOf("."));
+    }
+}
