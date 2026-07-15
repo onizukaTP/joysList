@@ -13,9 +13,11 @@
 
     <modules>
         <module>shared/common-events</module>
+        <module>shared/common-s3</module>
         <module>services/listing-service</module>
         <module>services/notification-service</module>
         <module>services/api-gateway</module>
+        <module>services/user-service</module>
     </modules>
 
 </project>
