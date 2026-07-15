@@ -1,7 +1,7 @@
 package com.tpdev.joysList.controller;
 
 import com.tpdev.joysList.entity.Ad;
-import com.tpdev.joysList.service.BaseAdService;
+import com.tpdev.joysList.service.IBaseAdService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,9 +10,9 @@ import java.util.List;
 
 public abstract class BaseAdController<T extends Ad> {
 
-    private final BaseAdService<T> service;
+    private final IBaseAdService<T> service;
 
-    protected BaseAdController(BaseAdService<T> service) {
+    protected BaseAdController(IBaseAdService<T> service) {
         this.service = service;
     }
 
@@ -40,3 +40,4 @@ public abstract class BaseAdController<T extends Ad> {
         return ResponseEntity.noContent().build();
     }
 }
+
