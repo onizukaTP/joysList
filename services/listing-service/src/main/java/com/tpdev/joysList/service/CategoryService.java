@@ -1,30 +1,16 @@
 package com.tpdev.joysList.service;
 
 import com.tpdev.joysList.entity.Category;
-import com.tpdev.joysList.repo.CategoryRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
-@RequiredArgsConstructor
-public class CategoryService {
-    private final CategoryRepository categoryRepository;
+public interface CategoryService {
 
-    public void createCategory(Category category) {
-        categoryRepository.save(category);
-    }
+    void createCategory(Category category);
 
-    public List<Category> getAllCategory() {
-        return categoryRepository.findAll();
-    }
+    List<Category> getAllCategory();
 
-    public Category getCategoryByName(String name) {
-        return categoryRepository.findByName(name);
-    }
+    Category getCategoryByName(String name);
 
-    public void deleteCategory(Long id) {
-        categoryRepository.deleteById(id);
-    }
+    void deleteCategory(Long id);
 }

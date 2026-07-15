@@ -1,34 +1,18 @@
 package com.tpdev.joysList.service;
 
 import com.tpdev.joysList.entity.Subcategory;
-import com.tpdev.joysList.repo.SubcategoryRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
-@RequiredArgsConstructor
-public class SubcategoryService {
-    private final SubcategoryRepository repository;
+public interface SubcategoryService {
 
-    public List<Subcategory> getSubcategoriesByCategory(Long categoryId) {
-        return repository.findByCategoryId(categoryId);
-    }
+    List<Subcategory> getSubcategoriesByCategory(Long categoryId);
 
-    public void createSubcategory(Subcategory subcategory) {
-        repository.save(subcategory);
-    }
+    void createSubcategory(Subcategory subcategory);
 
-    public void deleteSubcategory(Long id) {
-        repository.deleteById(id);
-    }
+    void deleteSubcategory(Long id);
 
-    public Subcategory findById(Long id) {
-        return repository.findById(id).orElse(null);
-    }
+    Subcategory findById(Long id);
 
-    public List<Subcategory> findAll() {
-        return repository.findAll();
-    }
+    List<Subcategory> findAll();
 }
