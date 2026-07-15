@@ -16,25 +16,9 @@ As configured in [SecurityConfig.java](file:///d:/Personal/Projects/joysList/ser
 
 ## 🔑 Authentication Endpoints (`/api/v1/auth`)
 
-### 1. User Login
-* **Method**: `POST`
-* **Path**: `/api/v1/auth/login`
-* **Access**: Public
-* **Request Body** (`LoginRequest`):
-  ```json
-  {
-    "username": "your_username",
-    "password": "your_password"
-  }
-  ```
-* **Response** (`AuthResponse`):
-  ```json
-  {
-    "token": "jwt_access_token"
-  }
-  ```
+These endpoints are managed by the new `user-service` and routed via the API Gateway.
 
-### 2. User Registration
+### 1. User Registration
 * **Method**: `POST`
 * **Path**: `/api/v1/auth/register`
 * **Access**: Public
@@ -49,36 +33,122 @@ As configured in [SecurityConfig.java](file:///d:/Personal/Projects/joysList/ser
 * **Response** (`AuthResponse`):
   ```json
   {
-    "token": "jwt_access_token"
+    "accessToken": "jwt_access_token",
+    "refreshToken": "uuid_refresh_token",
+    "expiresIn": 3600,
+    "tokenType": "Bearer",
+    "userId": 1,
+    "username": "desired_username",
+    "role": "USER"
   }
   ```
 
-### 3. Delete User
-* **Method**: `DELETE`
-* **Path**: `/api/v1/auth/delete`
-* **Access**: Authenticated User/Admin
-* **Request Body**: `UserEntity` (JSON representation of the user entity to delete)
-* **Response**: String message `Successfully deleted <username>`
+### 2. User Login
+* **Method**: `POST`
+* **Path**: `/api/v1/auth/login`
+* **Access**: Public
+* **Request Body** (`LoginRequest`):
+  ```json
+  {
+    "username": "your_username",
+    "password": "your_password"
+  }
+  ```
+* **Response** (`AuthResponse`):
+  ```json
+  {
+    "accessToken": "jwt_access_token",
+    "refreshToken": "uuid_refresh_token",
+    "expiresIn": 3600,
+    "tokenType": "Bearer",
+    "userId": 1,
+    "username": "your_username",
+    "role": "USER"
+  }
+  ```
+
+### 3. Token Refresh
+* **Method**: `POST`
+* **Path**: `/api/v1/auth/refresh`
+* **Access**: Public
+* **Request Body** (`RefreshTokenRequest`):
+  ```json
+  {
+    "refreshToken": "uuid_refresh_token"
+  }
+  ```
+* **Response**: A new rotated `AuthResponse` JSON payload.
+
+### 4. User Logout
+* **Method**: `POST`
+* **Path**: `/api/v1/auth/logout`
+* **Access**: Authenticated (Bearer Token)
+* **Response**: Plain-text message `Logged out successfully`
 
 ---
 
-## 👤 User Endpoints (`/api/v1/users`)
+## 👤 User & Profile Endpoints (`/api/v1/users`)
 
-### 1. Get User by ID
+Managed by `user-service`.
+
+### 1. Get Profile
+* **Method**: `GET`
+* **Path**: `/api/v1/users/{id}/profile`
+* **Access**: Authenticated
+* **Path Variables**:
+  * `id` (Long): The user ID.
+* **Response** (`UserProfileDto`):
+  ```json
+  {
+    "userId": 1,
+    "username": "desired_username",
+    "email": "user@example.com",
+    "role": "USER",
+    "bio": "Software Engineer",
+    "phone": "+1234567890",
+    "location": "New York, USA",
+    "avatarUrl": "https://joyslist-images.s3.ap-south-1.amazonaws.com/avatars/abc.jpg",
+    "memberSince": "2026-07-15T12:00:00"
+  }
+  ```
+
+### 2. Update Profile
+* **Method**: `PUT`
+* **Path**: `/api/v1/users/{id}/profile`
+* **Access**: Authenticated (Owner or Admin)
+* **Request Body** (`UpdateProfileRequest`):
+  ```json
+  {
+    "bio": "New bio description",
+    "phone": "+9876543210",
+    "location": "San Francisco, USA"
+  }
+  ```
+* **Response**: The updated `UserProfileDto` JSON object.
+
+### 3. Upload Profile Avatar
+* **Method**: `POST`
+* **Path**: `/api/v1/users/{id}/avatar`
+* **Access**: Authenticated (Owner or Admin)
+* **Request Payload**: Multipart File (`file`)
+* **Response**:
+  ```json
+  {
+    "avatarUrl": "https://joyslist-images.s3.ap-south-1.amazonaws.com/avatars/uuid.jpg"
+  }
+  ```
+
+### 4. Remove Profile Avatar
+* **Method**: `DELETE`
+* **Path**: `/api/v1/users/{id}/avatar`
+* **Access**: Authenticated (Owner or Admin)
+* **Response**: Plain-text message `Avatar removed successfully`
+
+### 5. Get Public Info
 * **Method**: `GET`
 * **Path**: `/api/v1/users/{id}`
 * **Access**: Authenticated
-* **Path Variables**:
-  * `id` (Long): The database ID of the user.
-* **Response**: `UserEntity` JSON object.
-
-### 2. Get User by Email
-* **Method**: `GET`
-* **Path**: `/api/v1/users/email`
-* **Access**: Authenticated
-* **Query Parameters**:
-  * `email` (String): User's email address.
-* **Response**: `UserEntity` JSON object.
+* **Response**: Public-facing `UserProfileDto` JSON object containing only username, email, memberSince, and avatarUrl.
 
 ---
 
