@@ -1,5 +1,6 @@
 package com.tpdev.userService.controller;
 
+import com.tpdev.joysList.constants.ApiConstants;
 import com.tpdev.userService.dto.AuthResponse;
 import com.tpdev.userService.dto.LoginRequest;
 import com.tpdev.userService.dto.RefreshTokenRequest;
@@ -15,34 +16,34 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/auth")
+@RequestMapping(ApiConstants.AUTH)
 @RequiredArgsConstructor
 @Slf4j
 public class AuthController {
 
     private final AuthService authService;
 
-    @PostMapping("/register")
+    @PostMapping(ApiConstants.REGISTER)
     public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest request) {
-        log.info("POST /api/v1/auth/register — username={}", request.getUsername());
+        log.info("POST " + ApiConstants.AUTH + ApiConstants.REGISTER + " — username={}", request.getUsername());
         return new ResponseEntity<>(authService.register(request), HttpStatus.CREATED);
     }
 
-    @PostMapping("/login")
+    @PostMapping(ApiConstants.LOGIN)
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
-        log.info("POST /api/v1/auth/login — username={}", request.getUsername());
+        log.info("POST " + ApiConstants.AUTH + ApiConstants.LOGIN + " — username={}", request.getUsername());
         return ResponseEntity.ok(authService.login(request));
     }
 
-    @PostMapping("/refresh")
+    @PostMapping(ApiConstants.REFRESH)
     public ResponseEntity<AuthResponse> refresh(@Valid @RequestBody RefreshTokenRequest request) {
-        log.info("POST /api/v1/auth/refresh");
+        log.info("POST " + ApiConstants.AUTH + ApiConstants.REFRESH);
         return ResponseEntity.ok(authService.refresh(request));
     }
 
-    @PostMapping("/logout")
+    @PostMapping(ApiConstants.LOGOUT)
     public ResponseEntity<String> logout(@AuthenticationPrincipal UserDetails userDetails) {
-        log.info("POST /api/v1/auth/logout — username={}", userDetails.getUsername());
+        log.info("POST " + ApiConstants.AUTH + ApiConstants.LOGOUT + " — username={}", userDetails.getUsername());
         authService.logout(userDetails.getUsername());
         return ResponseEntity.ok("Logged out successfully");
     }
