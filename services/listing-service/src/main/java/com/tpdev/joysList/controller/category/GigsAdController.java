@@ -1,5 +1,6 @@
 package com.tpdev.joysList.controller.category;
 
+import com.tpdev.joysList.constants.ApiConstants;
 import com.tpdev.joysList.controller.BaseAdController;
 import com.tpdev.joysList.entity.category.GigsAd;
 import com.tpdev.joysList.entity.enums.Gigs;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/ads/gigs")
+@RequestMapping(ApiConstants.ADS_GIGS)
 public class GigsAdController extends BaseAdController<GigsAd> {
     private final GigsAdService service;
 
@@ -30,7 +31,7 @@ public class GigsAdController extends BaseAdController<GigsAd> {
         return new ResponseEntity<>(gigsAd, HttpStatus.CREATED);
     }
 
-    @GetMapping("/filter")
+    @GetMapping(ApiConstants.FILTER)
     public ResponseEntity<List<GigsAd>> filter(
             @RequestParam(required = false)Gigs gigs,
             @RequestParam(required = false)PaymentStatus status

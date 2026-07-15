@@ -1,5 +1,6 @@
 package com.tpdev.joysList.controller;
 
+import com.tpdev.joysList.constants.ApiConstants;
 import com.tpdev.joysList.entity.Subcategory;
 import com.tpdev.joysList.service.SubcategoryService;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +12,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/subcategories")
+@RequestMapping(ApiConstants.SUBCATEGORIES)
 public class SubcategoryController {
     private final SubcategoryService service;
 
@@ -20,7 +21,7 @@ public class SubcategoryController {
         return ResponseEntity.ok(service.findAll());
     }
 
-    @GetMapping("/category/{categoryId}")
+    @GetMapping(ApiConstants.CATEGORY_BY_ID)
     public ResponseEntity<List<Subcategory>> getSubcategories(@PathVariable Long categoryId) {
         List<Subcategory> result =  service.getSubcategoriesByCategory(categoryId);
         return ResponseEntity.ok(result);
@@ -32,7 +33,7 @@ public class SubcategoryController {
         return new ResponseEntity<>("Subcategory created successfully.", HttpStatus.CREATED);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(ApiConstants.ID)
     public ResponseEntity<String> updateSubcategory (
             @PathVariable Long id,
             @RequestBody Subcategory subcategory
@@ -45,7 +46,7 @@ public class SubcategoryController {
         return ResponseEntity.ok("Updated successfully.");
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(ApiConstants.ID)
     public ResponseEntity<String> deleteSubcategory(@PathVariable Long id) {
         if (service.findById(id) == null)
             return new ResponseEntity<>("Not found with the id: " + id, HttpStatus.NOT_FOUND);

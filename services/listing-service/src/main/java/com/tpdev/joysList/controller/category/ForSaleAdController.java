@@ -1,5 +1,6 @@
 package com.tpdev.joysList.controller.category;
 
+import com.tpdev.joysList.constants.ApiConstants;
 import com.tpdev.joysList.controller.BaseAdController;
 import com.tpdev.joysList.entity.category.ForSaleAd;
 import com.tpdev.joysList.entity.enums.Condition;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/ads/for_sale")
+@RequestMapping(ApiConstants.ADS_FOR_SALE)
 public class ForSaleAdController extends BaseAdController<ForSaleAd> {
     private final ForSaleAdService service;
 
@@ -30,7 +31,7 @@ public class ForSaleAdController extends BaseAdController<ForSaleAd> {
         return new ResponseEntity<>(forSaleAd, HttpStatus.CREATED);
     }
 
-    @GetMapping("/filter")
+    @GetMapping(ApiConstants.FILTER)
     public ResponseEntity<List<ForSaleAd>> filter(
             @RequestParam(required = false)SoldBy soldBy,
             @RequestParam(required = false)Condition condition

@@ -1,5 +1,6 @@
 package com.tpdev.joysList.controller.category;
 
+import com.tpdev.joysList.constants.ApiConstants;
 import com.tpdev.joysList.controller.BaseAdController;
 import com.tpdev.joysList.entity.category.JobAd;
 import com.tpdev.joysList.entity.enums.EmploymentType;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/ads/jobs")
+@RequestMapping(ApiConstants.ADS_JOBS)
 public class JobAdController extends BaseAdController<JobAd> {
 
     private final JobAdService jobAdService;
@@ -31,7 +32,7 @@ public class JobAdController extends BaseAdController<JobAd> {
         return new ResponseEntity<>(jobAd, HttpStatus.CREATED);
     }
 
-    @GetMapping("/filter")
+    @GetMapping(ApiConstants.FILTER)
     public ResponseEntity<List<JobAd>> filter(
             @RequestParam(required = false)Boolean nonProfitOrganization,
             @RequestParam(required = false)Boolean internship,

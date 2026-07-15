@@ -1,5 +1,6 @@
 package com.tpdev.joysList.controller.category;
 
+import com.tpdev.joysList.constants.ApiConstants;
 import com.tpdev.joysList.controller.BaseAdController;
 import com.tpdev.joysList.entity.category.HousingAd;
 import com.tpdev.joysList.entity.enums.HousingType;
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/ads/housing")
+@RequestMapping(ApiConstants.ADS_HOUSING)
 public class HousingAdController extends BaseAdController<HousingAd> {
     private final HousingAdService housingAdService;
 
@@ -32,7 +33,7 @@ public class HousingAdController extends BaseAdController<HousingAd> {
         return new ResponseEntity<>(housingAd, HttpStatus.CREATED);
     }
 
-    @GetMapping("/filter")
+    @GetMapping(ApiConstants.FILTER)
     public ResponseEntity<List<HousingAd>> filterHousing (
             @RequestParam(required = false) HousingType type,
             @RequestParam(required = false) Byte minBeds,

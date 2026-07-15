@@ -1,5 +1,6 @@
 package com.tpdev.joysList.controller.category;
 
+import com.tpdev.joysList.constants.ApiConstants;
 import com.tpdev.joysList.controller.BaseAdController;
 import com.tpdev.joysList.entity.category.ResumeAd;
 import com.tpdev.joysList.entity.enums.EducationCompleted;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/ads/resumes")
+@RequestMapping(ApiConstants.ADS_RESUMES)
 public class ResumeAdController extends BaseAdController<ResumeAd> {
     private final ResumeAdService service;
 
@@ -29,7 +30,7 @@ public class ResumeAdController extends BaseAdController<ResumeAd> {
         return new ResponseEntity<>(resumeAd, HttpStatus.CREATED);
     }
 
-    @GetMapping("/filter")
+    @GetMapping(ApiConstants.FILTER)
     public ResponseEntity<List<ResumeAd>> filter(
             @RequestParam(required = false)Boolean availableMornings,
             @RequestParam(required = false)Boolean availableAfternoons,

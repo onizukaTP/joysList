@@ -1,5 +1,6 @@
 package com.tpdev.joysList.controller.category;
 
+import com.tpdev.joysList.constants.ApiConstants;
 import com.tpdev.joysList.controller.BaseAdController;
 import com.tpdev.joysList.entity.category.EventAd;
 import com.tpdev.joysList.entity.enums.EventType;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/ads/events")
+@RequestMapping(ApiConstants.ADS_EVENTS)
 public class EventAdController extends BaseAdController<EventAd> {
     private final EventAdService service;
 
@@ -29,7 +30,7 @@ public class EventAdController extends BaseAdController<EventAd> {
         return new ResponseEntity<>(eventAd, HttpStatus.CREATED);
     }
 
-    @GetMapping("/filter")
+    @GetMapping(ApiConstants.FILTER)
     public ResponseEntity<List<EventAd>> filter(
             @RequestParam(required = false)EventType eventType,
             @RequestParam(required = false)List<EventType> eventTypes

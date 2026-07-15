@@ -1,5 +1,6 @@
 package com.tpdev.joysList.controller;
 
+import com.tpdev.joysList.constants.ApiConstants;
 import com.tpdev.joysList.entity.Category;
 import com.tpdev.joysList.service.CategoryService;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/categories")
+@RequestMapping(ApiConstants.CATEGORIES)
 @RequiredArgsConstructor
 public class CategoryController {
     private final CategoryService categoryService;
@@ -26,12 +27,12 @@ public class CategoryController {
         return ResponseEntity.ok(categoryService.getAllCategory());
     }
 
-    @GetMapping("/{name}")
+    @GetMapping(ApiConstants.NAME)
     public ResponseEntity<Category> getCategoryByName(@PathVariable String name) {
         return ResponseEntity.ok(categoryService.getCategoryByName(name));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(ApiConstants.ID)
     public ResponseEntity<String> deleteCategoryById(@PathVariable Long id) {
         categoryService.deleteCategory(id);
         return ResponseEntity.ok("Category deleted successfully.");

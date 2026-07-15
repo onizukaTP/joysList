@@ -1,5 +1,6 @@
 package com.tpdev.joysList.controller.category;
 
+import com.tpdev.joysList.constants.ApiConstants;
 import com.tpdev.joysList.controller.BaseAdController;
 import com.tpdev.joysList.entity.category.ServiceAd;
 import com.tpdev.joysList.entity.enums.ServiceType;
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/ads/services")
+@RequestMapping(ApiConstants.ADS_SERVICES)
 public class ServiceAdController extends BaseAdController<ServiceAd> {
     private final ServiceAdService serviceAdService;
 
@@ -26,7 +27,7 @@ public class ServiceAdController extends BaseAdController<ServiceAd> {
         return new ResponseEntity<>(serviceAdService.createAd(serviceAd), HttpStatus.CREATED);
     }
 
-    @GetMapping("/filter")
+    @GetMapping(ApiConstants.FILTER)
     public ResponseEntity<List<ServiceAd>> filter(@RequestParam(required = false)ServiceType serviceType) {
         List<ServiceAd> ads = serviceAdService.filter(serviceType);
         return ResponseEntity.ok(ads);
