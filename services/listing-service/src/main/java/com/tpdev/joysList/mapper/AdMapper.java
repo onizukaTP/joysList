@@ -8,9 +8,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class AdMapper {
 
-    public HousingAd toHousingAd(AdRequestDto dto, Subcategory subcategory, UserEntity postedBy) {
+    public HousingAd toHousingAd(AdRequestDto dto, Subcategory subcategory, Long postedById) {
         HousingAd ad = new HousingAd();
-        setCommonFields(ad, dto, subcategory, postedBy);
+        setCommonFields(ad, dto, subcategory, postedById);
         ad.setNumberOfBeds(dto.getNumberOfBeds());
         ad.setNumberOfBathrooms(dto.getNumberOfBathrooms());
         ad.setCatsOk(dto.getCatsOk());
@@ -23,32 +23,32 @@ public class AdMapper {
         return ad;
     }
 
-    public ForSaleAd toForSaleAd(AdRequestDto dto, Subcategory subcategory, UserEntity postedBy) {
+    public ForSaleAd toForSaleAd(AdRequestDto dto, Subcategory subcategory, Long postedById) {
         ForSaleAd ad = new ForSaleAd();
-        setCommonFields(ad, dto, subcategory, postedBy);
+        setCommonFields(ad, dto, subcategory, postedById);
         ad.setSoldBy(dto.getSoldBy());
         ad.setCondition(dto.getCondition());
         return ad;
     }
 
-    public EventAd toEventAd(AdRequestDto dto, Subcategory subcategory, UserEntity postedBy) {
+    public EventAd toEventAd(AdRequestDto dto, Subcategory subcategory, Long postedById) {
         EventAd ad = new EventAd();
-        setCommonFields(ad, dto, subcategory, postedBy);
+        setCommonFields(ad, dto, subcategory, postedById);
         ad.setEventTypes(dto.getEventTypes());
         return ad;
     }
 
-    public GigsAd toGigsAd(AdRequestDto dto, Subcategory subcategory, UserEntity postedBy) {
+    public GigsAd toGigsAd(AdRequestDto dto, Subcategory subcategory, Long postedById) {
         GigsAd ad = new GigsAd();
-        setCommonFields(ad, dto, subcategory, postedBy);
+        setCommonFields(ad, dto, subcategory, postedById);
         ad.setGigs(dto.getGigs());
         ad.setStatus(dto.getStatus());
         return ad;
     }
 
-    public JobAd toJobAd(AdRequestDto dto, Subcategory subcategory, UserEntity postedBy) {
+    public JobAd toJobAd(AdRequestDto dto, Subcategory subcategory, Long postedById) {
         JobAd ad = new JobAd();
-        setCommonFields(ad, dto, subcategory, postedBy);
+        setCommonFields(ad, dto, subcategory, postedById);
         ad.setNonProfitOrganization(dto.getNonProfitOrganization());
         ad.setInternship(dto.getInternship());
         ad.setTelecommutingOk(dto.getTelecommutingOk());
@@ -57,24 +57,24 @@ public class AdMapper {
         return ad;
     }
 
-    public ServiceAd toServiceAd(AdRequestDto dto, Subcategory subcategory, UserEntity postedBy) {
+    public ServiceAd toServiceAd(AdRequestDto dto, Subcategory subcategory, Long postedById) {
         ServiceAd ad = new ServiceAd();
-        setCommonFields(ad, dto, subcategory, postedBy);
+        setCommonFields(ad, dto, subcategory, postedById);
         ad.setServiceType(dto.getServiceType());
         return ad;
     }
 
-    public CommunityAd toCommunityAd(AdRequestDto dto, Subcategory subcategory, UserEntity postedBy) {
+    public CommunityAd toCommunityAd(AdRequestDto dto, Subcategory subcategory, Long postedById) {
         CommunityAd ad = new CommunityAd();
-        setCommonFields(ad, dto, subcategory, postedBy);
+        setCommonFields(ad, dto, subcategory, postedById);
         ad.setCommunityType(dto.getCommunityType());
         ad.setLostOrFound(dto.getLostOrFound());
         return ad;
     }
 
-    public ResumeAd toResumeAd(AdRequestDto dto, Subcategory subcategory, UserEntity postedBy) {
+    public ResumeAd toResumeAd(AdRequestDto dto, Subcategory subcategory, Long postedById) {
         ResumeAd ad = new ResumeAd();
-        setCommonFields(ad, dto, subcategory, postedBy);
+        setCommonFields(ad, dto, subcategory, postedById);
         ad.setAvailableMornings(dto.getAvailableMornings());
         ad.setAvailableAfternoons(dto.getAvailableAfternoons());
         ad.setAvailableEvenings(dto.getAvailableEvenings());
@@ -85,7 +85,7 @@ public class AdMapper {
         return ad;
     }
 
-    public void setCommonFields(Ad ad, AdRequestDto dto, Subcategory subcategory, UserEntity postedBy) {
+    public void setCommonFields(Ad ad, AdRequestDto dto, Subcategory subcategory, Long postedById) {
         ad.setTitle(dto.getTitle());
         ad.setDescription(dto.getDescription());
         ad.setPrice(dto.getPrice());
@@ -96,6 +96,6 @@ public class AdMapper {
         ad.setDeliveryAvailable(dto.getDeliveryAvailable());
         ad.setSubcategory(subcategory);
         ad.setCreatedAt(dto.getCreatedAt());
-        ad.setPostedBy(postedBy);
+        ad.setPostedById(postedById);
     }
 }

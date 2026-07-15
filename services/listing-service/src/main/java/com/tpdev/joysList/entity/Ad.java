@@ -30,9 +30,7 @@ public class Ad {
     @JsonBackReference("subcategory-ads")
     private Subcategory subcategory;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private UserEntity postedBy;
-
-
+    // References the owning user by ID only; user data lives in user-service.
+    @Column(name = "posted_by_id", nullable = false)
+    private Long postedById;
 }

@@ -2,18 +2,13 @@ package com.tpdev.joysList.util;
 
 import com.tpdev.joysList.entity.Category;
 import com.tpdev.joysList.entity.Subcategory;
-import com.tpdev.joysList.entity.UserEntity;
 import com.tpdev.joysList.entity.enums.AdType;
-import com.tpdev.joysList.entity.enums.Role;
 import com.tpdev.joysList.repo.CategoryRepository;
 import com.tpdev.joysList.repo.SubcategoryRepository;
-import com.tpdev.joysList.repo.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component

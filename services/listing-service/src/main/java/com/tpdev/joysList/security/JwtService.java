@@ -1,6 +1,5 @@
 package com.tpdev.joysList.security;
 
-import com.tpdev.joysList.entity.UserEntity;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -19,20 +18,18 @@ public class JwtService {
         @Value("${jwt.secret}")
         private String secretKey;
 
-        public String generateToken(UserEntity user) {
-            return Jwts.builder()
-                    .setSubject(user.getUsername())
-                    .claim("role", user.getRole().name())
-                    .setIssuedAt(new Date())
-                    .setExpiration(
-                            new Date(System.currentTimeMillis() + 1000 * 60 * 60)
-                    ) // 1 hour
-                    .signWith(getSigningKey())
-                    .compact();
-        }
+
 
         public String extractUsername(String token) {
             return extractAllClaims(token).getSubject();
+        }
+
+        public Long extractUserId(String token) {
+            return extractClaim(token, claims -> claims.get("userId", Long.class));
+        }
+
+        public String extractRole(String token) {
+            return extractClaim(token, claims -> claims.get("role", String.class));
         }
 
         public boolean validateToken(String token, UserDetails userDetails) {

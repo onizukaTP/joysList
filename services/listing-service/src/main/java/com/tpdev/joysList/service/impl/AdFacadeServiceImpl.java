@@ -71,40 +71,40 @@ public class AdFacadeServiceImpl implements AdFacadeService {
                     "Subcategory does not belong to selected category");
         }
 
-        UserEntity currentUser = getCurrentUser();
+        Long postedById = getCurrentUserId();
 
         Ad savedAd = switch (dto.getAdType()) {
             case HOUSING  -> housingAdService.createAd(
-                    mapper.toHousingAd(dto, subcategory, currentUser));
+                    mapper.toHousingAd(dto, subcategory, postedById));
 
             case FOR_SALE -> forSaleAdService.createAd(
-                    mapper.toForSaleAd(dto, subcategory, currentUser));
+                    mapper.toForSaleAd(dto, subcategory, postedById));
 
             case EVENTS   -> eventAdService.createAd(
-                    mapper.toEventAd(dto, subcategory, currentUser));
+                    mapper.toEventAd(dto, subcategory, postedById));
 
             case GIGS     -> gigsAdService.createAd(
-                    mapper.toGigsAd(dto, subcategory, currentUser));
+                    mapper.toGigsAd(dto, subcategory, postedById));
 
             case JOBS     -> jobAdService.createAd(
-                    mapper.toJobAd(dto, subcategory, currentUser));
+                    mapper.toJobAd(dto, subcategory, postedById));
 
             case RESUMES  -> resumeAdService.createAd(
-                    mapper.toResumeAd(dto, subcategory, currentUser));
+                    mapper.toResumeAd(dto, subcategory, postedById));
 
             case SERVICES -> serviceAdService.createAd(
-                    mapper.toServiceAd(dto, subcategory, currentUser));
+                    mapper.toServiceAd(dto, subcategory, postedById));
 
             case COMMUNITY -> communityAdService.createAd(
-                    mapper.toCommunityAd(dto, subcategory, currentUser));
+                    mapper.toCommunityAd(dto, subcategory, postedById));
         };
 
-        log.info("Ad created by user {} under category {}", currentUser.getUsername(), savedAd.getSubcategory().getName());
+        log.info("Ad created by userId {} under category {}", postedById, savedAd.getSubcategory().getName());
 
         adEventProducer.publishAdCreated(
                 new AdCreatedEvent(
                         savedAd.getId(),
-                        currentUser.getId(),
+                        postedById,
                         savedAd.getTitle(),
                         savedAd.getSubcategory().getName()
                 )
@@ -175,7 +175,7 @@ public class AdFacadeServiceImpl implements AdFacadeService {
         existingAd.setPrice(dto.getPrice());
         existingAd.setLocation(dto.getLocation());
 
-        log.info("Ad {} updated by user {}", id, getCurrentUser().getUsername());
+        log.info("Ad {} updated by userId {}", id, getCurrentUserId());
         return repository.save(existingAd);
     }
 
@@ -186,26 +186,25 @@ public class AdFacadeServiceImpl implements AdFacadeService {
                 .orElseThrow(() -> new ResourceNotFound("Ad not found with id: " + id));
 
         repository.deleteById(id);
-        log.info("Ad {} deleted by user {}", id, getCurrentUser().getUsername());
+        log.info("Ad {} deleted by userId {}", id, getCurrentUserId());
 
         adEventProducer.publishAdDeleted(
                 new AdDeletedEvent(
                         ad.getId(),
-                        getCurrentUser().getId(),
+                        getCurrentUserId(),
                         ad.getTitle()
                 )
         );
         log.info("Ad Deleted Event published for adId={}", id);
     }
 
-    // Pulls the logged-in user out of the security context.
-    // The JwtAuthenticationFilter already put a CustomUserDetails object here
-    // when it validated the Bearer token, so this is always safe to call
-    // on any protected endpoint.
-    private UserEntity getCurrentUser() {
+    // Extract current authenticated user's ID from principal
+    private Long getCurrentUserId() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        CustomUserDetails userDetails = (CustomUserDetails) auth.getPrincipal();
-        return userDetails.getUser();
+        if (auth != null && auth.getPrincipal() instanceof CustomUserDetails userDetails) {
+            return userDetails.getUser().getId();
+        }
+        throw new IllegalStateException("User not authenticated or invalid user details type");
     }
 
     // helper function to map Ad to AdResponse
@@ -217,7 +216,7 @@ public class AdFacadeServiceImpl implements AdFacadeService {
                 ad.getPrice(),
                 ad.getLocation(),
                 ad.getSubcategory().getName(),
-                ad.getPostedBy().getId()
+                ad.getPostedById()
         );
     }
 }
