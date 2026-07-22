@@ -74,6 +74,7 @@ const adSchema = z.object({
   availableOvernights: z.boolean().optional(),
   availableWeekdays: z.boolean().optional(),
   availableWeekends: z.boolean().optional(),
+  hasImage: z.boolean().optional(),
 });
 
 type AdFormValues = z.infer<typeof adSchema>;

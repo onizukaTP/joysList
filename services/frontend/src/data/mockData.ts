@@ -1,4 +1,4 @@
-import type { Category, AdResponse } from "./types";
+import type { Category, AdResponse } from "../types";
 
 export const MOCK_CATEGORIES: Category[] = [
   { id: 1, name: "Housing" },
