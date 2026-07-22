@@ -155,7 +155,6 @@ public class AdFacadeServiceImpl implements AdFacadeService {
     }
 
     @Override
-    @Cacheable(value = "ads")
     public List<AdResponse> getAll() {
         log.info("Fetching ads from DB...");
         return repository.findAll()
