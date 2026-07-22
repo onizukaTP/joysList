@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 import api from "../services/api";
 import type { Category, AdResponse } from "../types";
+import { MOCK_CATEGORIES, MOCK_ADS } from "../data/mockData";
 import SearchBar from "../components/search/SearchBar";
 import AdCard from "../components/ads/AdCard";
 import { CardSkeleton, Button } from "../components/ui";
@@ -22,22 +23,31 @@ const CATEGORY_ICONS: Record<string, React.ReactNode> = {
 export default function HomePage() {
   const navigate = useNavigate();
 
-  // 1. Fetch categories
-  const { data: categories, isLoading: categoriesLoading } = useQuery<Category[]>({
+  // 1. Fetch categories with static fallback
+  const { data: categories = MOCK_CATEGORIES, isLoading: categoriesLoading } = useQuery<Category[]>({
     queryKey: ["categories"],
     queryFn: async () => {
-      const res = await api.get("/categories");
-      return res.data;
+      try {
+        const res = await api.get("/categories");
+        return res.data && res.data.length > 0 ? res.data : MOCK_CATEGORIES;
+      } catch (err) {
+        console.warn("[HomePage] Categories API unavailable, using fallback static data.");
+        return MOCK_CATEGORIES;
+      }
     },
   });
 
-  // 2. Fetch recent ads
-  const { data: recentAds, isLoading: adsLoading } = useQuery<AdResponse[]>({
+  // 2. Fetch recent ads with static fallback
+  const { data: recentAds = MOCK_ADS, isLoading: adsLoading } = useQuery<AdResponse[]>({
     queryKey: ["recentAds"],
     queryFn: async () => {
-      const res = await api.get("/ads");
-      // Grab the first 8 listings
-      return res.data.slice(0, 8);
+      try {
+        const res = await api.get("/ads");
+        return res.data && res.data.length > 0 ? res.data.slice(0, 8) : MOCK_ADS;
+      } catch (err) {
+        console.warn("[HomePage] Recent Ads API unavailable, using fallback static data.");
+        return MOCK_ADS;
+      }
     },
   });
 

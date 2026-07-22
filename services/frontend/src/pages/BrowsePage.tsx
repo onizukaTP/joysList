@@ -3,6 +3,7 @@ import { useParams, useSearchParams, useNavigate } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 import api from "../services/api";
 import type { Category, Subcategory, AdResponse, Page } from "../types";
+import { MOCK_ADS } from "../data/mockData";
 import AdCard from "../components/ads/AdCard";
 import Pagination from "../components/ui/Pagination";
 import Button from "../components/ui/Button";
@@ -59,20 +60,37 @@ export default function BrowsePage() {
       currentPage,
     ],
     queryFn: async () => {
-      const params: Record<string, any> = {
-        page: currentPage,
-        size,
-        sortBy: "createdAt",
-        sortDir,
+      try {
+        const params: Record<string, any> = {
+          page: currentPage,
+          size,
+          sortBy: "createdAt",
+          sortDir,
+        };
+
+        if (routeCategory) params.category = routeCategory;
+        if (minPrice) params.minPrice = parseFloat(minPrice);
+        if (maxPrice) params.maxPrice = parseFloat(maxPrice);
+        if (selectedSubcat) params.subcategoryId = parseInt(selectedSubcat, 10);
+
+        const res = await api.get("/ads/search", { params });
+        if (res.data && res.data.content && res.data.content.length > 0) {
+          return res.data;
+        }
+      } catch (err) {
+        console.warn("[BrowsePage] Search API unavailable, using fallback mock data.");
+      }
+
+      // Return mock paginated fallback
+      return {
+        content: MOCK_ADS,
+        totalPages: 1,
+        totalElements: MOCK_ADS.length,
+        size: 12,
+        number: 0,
+        first: true,
+        last: true,
       };
-
-      if (routeCategory) params.category = routeCategory;
-      if (minPrice) params.minPrice = parseFloat(minPrice);
-      if (maxPrice) params.maxPrice = parseFloat(maxPrice);
-      if (selectedSubcat) params.subcategoryId = parseInt(selectedSubcat, 10);
-
-      const res = await api.get("/ads/search", { params });
-      return res.data;
     },
   });
 
