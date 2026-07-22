@@ -16,9 +16,15 @@ api.interceptors.request.use(
     if (token && config.headers) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+    console.log(`[API Request] ${config.method?.toUpperCase()} ${config.url}`, {
+      headers: config.headers,
+      params: config.params,
+      data: config.data,
+    });
     return config;
   },
   (error) => {
+    console.error("[API Request Error]", error);
     return Promise.reject(error);
   }
 );
@@ -42,8 +48,12 @@ const processQueue = (error: any, token: string | null = null) => {
 };
 
 api.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    console.log(`[API Response Success] ${response.config.method?.toUpperCase()} ${response.config.url}`, response.data);
+    return response;
+  },
   async (error) => {
+    console.error(`[API Response Error] ${error.config?.method?.toUpperCase()} ${error.config?.url}`, error.response || error);
     const originalRequest = error.config;
 
     // Skip refreshing for Auth endpoints

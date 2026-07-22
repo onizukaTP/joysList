@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { AuthResponse, LoginRequest, RegisterRequest } from "../types";
+import type { AuthResponse, LoginRequest, RegisterRequest } from "../types";
 import api from "../services/api";
 
 interface AuthState {
@@ -26,10 +26,12 @@ export const useAuthStore = create<AuthState>((set) => ({
   isLoading: false,
 
   login: async (credentials) => {
+    console.log("[AuthStore] Initiating login for user:", credentials.username);
     set({ isLoading: true });
     try {
       const response = await api.post<AuthResponse>("/auth/login", credentials);
       const data = response.data;
+      console.log("[AuthStore] Login successful:", data);
 
       localStorage.setItem("accessToken", data.accessToken);
       localStorage.setItem("refreshToken", data.refreshToken);
@@ -49,16 +51,21 @@ export const useAuthStore = create<AuthState>((set) => ({
         },
         isAuthenticated: true,
       });
+    } catch (err) {
+      console.error("[AuthStore] Login failed:", err);
+      throw err;
     } finally {
       set({ isLoading: false });
     }
   },
 
   register: async (credentials) => {
+    console.log("[AuthStore] Initiating registration for user:", credentials.username);
     set({ isLoading: true });
     try {
       const response = await api.post<AuthResponse>("/auth/register", credentials);
       const data = response.data;
+      console.log("[AuthStore] Registration successful:", data);
 
       localStorage.setItem("accessToken", data.accessToken);
       localStorage.setItem("refreshToken", data.refreshToken);
@@ -78,16 +85,20 @@ export const useAuthStore = create<AuthState>((set) => ({
         },
         isAuthenticated: true,
       });
+    } catch (err) {
+      console.error("[AuthStore] Registration failed:", err);
+      throw err;
     } finally {
       set({ isLoading: false });
     }
   },
 
   logout: async () => {
+    console.log("[AuthStore] Logging out user");
     try {
       await api.post("/auth/logout");
     } catch (e) {
-      // Ignore errors on logout endpoint and clean local state regardless
+      console.warn("[AuthStore] Logout endpoint error ignored:", e);
     } finally {
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
@@ -102,6 +113,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   },
 
   hydrate: () => {
+    console.log("[AuthStore] Hydrating auth state from localStorage");
     const accessToken = localStorage.getItem("accessToken");
     const refreshToken = localStorage.getItem("refreshToken");
     const userStr = localStorage.getItem("user");
@@ -109,6 +121,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     if (accessToken && refreshToken && userStr) {
       try {
         const user = JSON.parse(userStr);
+        console.log("[AuthStore] Successfully hydrated user:", user.username);
         set({
           accessToken,
           refreshToken,
@@ -116,8 +129,11 @@ export const useAuthStore = create<AuthState>((set) => ({
           isAuthenticated: true,
         });
       } catch (e) {
+        console.error("[AuthStore] Failed parsing cached user string, resetting:", e);
         localStorage.clear();
       }
+    } else {
+      console.log("[AuthStore] No cached session found during hydration");
     }
   },
 }));
