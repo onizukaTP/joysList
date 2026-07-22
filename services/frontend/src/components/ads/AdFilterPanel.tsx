@@ -61,9 +61,11 @@ export default function AdFilterPanel({ category, register }: AdFilterPanelProps
           <Select
             label="Laundry"
             options={[
-              { value: "IN_UNIT", label: "In-unit" },
-              { value: "ON_SITE", label: "On-site" },
-              { value: "NONE", label: "None" },
+              { value: "in_unit", label: "In-unit" },
+              { value: "hookups", label: "Hookups" },
+              { value: "in_building", label: "In-building" },
+              { value: "on_site", label: "On-site" },
+              { value: "no_laundry", label: "No Laundry" },
             ]}
             placeholder="Select Laundry"
             {...register("laundry")}
@@ -71,10 +73,13 @@ export default function AdFilterPanel({ category, register }: AdFilterPanelProps
           <Select
             label="Parking"
             options={[
-              { value: "GARAGE", label: "Garage" },
-              { value: "STREET", label: "Street" },
-              { value: "COVERED", label: "Covered" },
-              { value: "NONE", label: "None" },
+              { value: "attached_garage", label: "Attached Garage" },
+              { value: "detached_garage", label: "Detached Garage" },
+              { value: "carport", label: "Carport" },
+              { value: "off_street", label: "Off-street" },
+              { value: "street", label: "Street" },
+              { value: "valet", label: "Valet" },
+              { value: "no_parking", label: "No Parking" },
             ]}
             placeholder="Select Parking"
             {...register("parking")}

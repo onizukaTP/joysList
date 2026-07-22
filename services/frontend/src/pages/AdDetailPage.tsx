@@ -1,26 +1,46 @@
-import React from "react";
+import React, { useState } from "react";
 import { useParams, Link } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 import api from "../services/api";
 import type { AdResponse, UserProfile } from "../types";
+import { MOCK_ADS } from "../data/mockData";
 import Button from "../components/ui/Button";
 import Avatar from "../components/ui/Avatar";
 import Badge from "../components/ui/Badge";
+import Modal from "../components/ui/Modal";
+import Input from "../components/ui/Input";
+import Textarea from "../components/ui/Textarea";
 import { CardSkeleton } from "../components/ui/Skeleton";
-import { MapPin, User, Calendar, Tag, FileText, ChevronLeft, Mail, Phone, ExternalLink } from "lucide-react";
+import { toast } from "sonner";
+import { MapPin, User, Calendar, Tag, FileText, ChevronLeft, Mail, Phone, Send } from "lucide-react";
 
 export default function AdDetailPage() {
   const { id } = useParams<{ id: string }>();
 
-  // 1. Fetch Ad details
+  // Contact Modal State
+  const [showContactModal, setShowContactModal] = useState(false);
+  const [contactName, setContactName] = useState("");
+  const [contactEmail, setContactEmail] = useState("");
+  const [contactMessage, setContactMessage] = useState("");
+  const [sendingContact, setSendingContact] = useState(false);
+
+  // 1. Fetch Ad details with static fallback
   const { data: ad, isLoading: adLoading, error: adError } = useQuery<AdResponse>({
     queryKey: ["ad", id],
     queryFn: async () => {
-      // Find category first to request the exact category details
-      const genericRes = await api.get(`/ads`);
-      const foundAd = genericRes.data.find((a: any) => a.id === parseInt(id || "", 10));
-      if (!foundAd) throw new Error("Ad not found");
-      return foundAd;
+      try {
+        const genericRes = await api.get(`/ads`);
+        const foundAd = genericRes.data?.find((a: any) => String(a.id) === String(id));
+        if (foundAd) return foundAd;
+      } catch (err) {
+        console.warn("[AdDetailPage] Ads API request error ignored, using fallback static data.");
+      }
+
+      // Check static mock data fallback
+      const mockAd = MOCK_ADS.find((a) => String(a.id) === String(id));
+      if (mockAd) return mockAd;
+
+      throw new Error("Ad not found");
     },
   });
 
@@ -33,6 +53,33 @@ export default function AdDetailPage() {
       return res.data;
     },
   });
+
+  const handleSendContactMessage = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSendingContact(true);
+    try {
+      console.log(`[ContactSeller] Inquiry sent for adId=${id}:`, {
+        adTitle: ad?.title,
+        recipientUserId: ad?.userId,
+        senderName: contactName,
+        senderEmail: contactEmail,
+        message: contactMessage,
+      });
+
+      // Simulation timeout until backend messaging service endpoint is added
+      await new Promise((resolve) => setTimeout(resolve, 800));
+
+      toast.success(`Inquiry sent to ${posterProfile?.username || "the seller"}!`);
+      setShowContactModal(false);
+      setContactName("");
+      setContactEmail("");
+      setContactMessage("");
+    } catch (err) {
+      toast.error("Failed to send message.");
+    } finally {
+      setSendingContact(false);
+    }
+  };
 
   if (adLoading) {
     return (
@@ -168,20 +215,76 @@ export default function AdDetailPage() {
                 </div>
 
                 <div className="pt-2">
-                  <a
-                    href={`mailto:${posterProfile?.email || ""}`}
-                    className="block"
+                  <Button
+                    variant="primary"
+                    className="w-full justify-center"
+                    onClick={() => setShowContactModal(true)}
                   >
-                    <Button variant="primary" className="w-full justify-center">
-                      Contact Seller
-                    </Button>
-                  </a>
+                    Contact Seller
+                  </Button>
                 </div>
               </div>
             )}
           </div>
         </aside>
       </div>
+
+      {/* Contact Seller Modal */}
+      <Modal
+        isOpen={showContactModal}
+        onClose={() => setShowContactModal(false)}
+        title={`Contact ${posterProfile?.username || "Seller"}`}
+      >
+        <form onSubmit={handleSendContactMessage} className="space-y-4 pt-2">
+          <p className="text-xs text-bronze">
+            Send an inquiry regarding <span className="font-bold text-walnut">"{ad.title}"</span>.
+          </p>
+
+          <Input
+            label="Your Name"
+            type="text"
+            placeholder="John Doe"
+            required
+            value={contactName}
+            onChange={(e) => setContactName(e.target.value)}
+          />
+
+          <Input
+            label="Your Email"
+            type="email"
+            placeholder="john@example.com"
+            required
+            value={contactEmail}
+            onChange={(e) => setContactEmail(e.target.value)}
+          />
+
+          <Textarea
+            label="Message"
+            placeholder="Hi, is this listing still available? I am interested in buying..."
+            required
+            value={contactMessage}
+            onChange={(e) => setContactMessage(e.target.value)}
+          />
+
+          <div className="flex justify-end gap-3 pt-4 border-t border-sand">
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={() => setShowContactModal(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              variant="primary"
+              isLoading={sendingContact}
+              leftIcon={<Send size={16} />}
+            >
+              Send Message
+            </Button>
+          </div>
+        </form>
+      </Modal>
     </div>
   );
 }

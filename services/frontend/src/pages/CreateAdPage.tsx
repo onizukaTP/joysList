@@ -13,7 +13,7 @@ import Button from "../components/ui/Button";
 import Card from "../components/ui/Card";
 import AdFilterPanel from "../components/ads/AdFilterPanel";
 import { toast } from "sonner";
-import { PlusCircle, Info, ChevronRight, ChevronLeft } from "lucide-react";
+import { PlusCircle, Info, ChevronRight, ChevronLeft, ImagePlus, Upload } from "lucide-react";
 
 const adSchema = z.object({
   adType: z.enum([
@@ -29,7 +29,13 @@ const adSchema = z.object({
   subcategoryId: z.string().min(1, "Subcategory is required"),
   title: z.string().min(5, "Title must be at least 5 characters").max(100),
   description: z.string().min(15, "Description must be at least 15 characters"),
-  price: z.string().optional(),
+  price: z
+    .string()
+    .optional()
+    .refine(
+      (val) => !val || /^\d+(\.\d{1,2})?$/.test(val),
+      "Price must be a valid number (e.g. 10 or 10.50)"
+    ),
   location: z.string().min(3, "Location is required"),
   isFree: z.boolean().optional(),
   deliveryAvailable: z.boolean().optional(),
@@ -120,25 +126,65 @@ export default function CreateAdPage() {
   });
 
   const onSubmit = async (data: AdFormValues) => {
+    console.log("[CreateAd] Submitting form data:", data);
     setLoading(true);
     try {
+      // Clean up empty optional fields and convert frontend casing to backend Enums
+      const cleanedData: Record<string, any> = {};
+      
+      const LAUNDRY_MAP: Record<string, string> = {
+        in_unit: "UNIT",
+        hookups: "HOOKUPS",
+        in_building: "INBUILDING",
+        on_site: "ONSITE",
+        no_laundry: "NOLAUNDRY",
+      };
+
+      const PARKING_MAP: Record<string, string> = {
+        attached_garage: "ATTACHED_GARAGE",
+        detached_garage: "DETACHED_GARAGE",
+        carport: "CARPORT",
+        off_street: "OFF_STREET",
+        street: "STREET",
+        valet: "VALET",
+        no_parking: "NOPARKING",
+      };
+
+      Object.entries(data).forEach(([key, val]) => {
+        if (val !== "" && val !== undefined) {
+          if (key === "laundry" && typeof val === "string" && LAUNDRY_MAP[val]) {
+            cleanedData[key] = LAUNDRY_MAP[val];
+          } else if (key === "parking" && typeof val === "string" && PARKING_MAP[val]) {
+            cleanedData[key] = PARKING_MAP[val];
+          } else {
+            cleanedData[key] = val;
+          }
+        }
+      });
+
       const formattedPayload = {
-        ...data,
+        ...cleanedData,
         subcategoryId: parseInt(data.subcategoryId, 10),
         price: data.price ? parseFloat(data.price) : null,
       };
 
-      // Endpoint determines creation target
-      const categoryPath = data.adType.toLowerCase();
-      await api.post(`/ads/${categoryPath}`, formattedPayload);
+      // Post to unified AdFacadeService endpoint (POST /api/v1/ads)
+      console.log(`[CreateAd] Posting payload to /ads`, formattedPayload);
+      await api.post("/ads", formattedPayload);
 
       toast.success("Ad created successfully!");
       navigate("/browse");
     } catch (e: any) {
+      console.error("[CreateAd] Failed to submit listing:", e);
       toast.error(e.response?.data?.message || "Failed to create ad listing");
     } finally {
       setLoading(false);
     }
+  };
+
+  const onInvalid = (errors: any) => {
+    console.warn("[CreateAd] Form validation errors blocked submit:", errors);
+    toast.error("Please fill in all required fields properly.");
   };
 
   const nextStep = () => setStep((s) => s + 1);
@@ -151,23 +197,28 @@ export default function CreateAdPage() {
           {/* Header */}
           <div className="flex items-center justify-between border-b border-sand pb-4">
             <div>
-              <h1 className="text-2xl font-black text-walnut">Post a Classified Listing</h1>
+              <h1 className="text-2xl font-black text-walnut leading-none">Post a Classified Listing</h1>
               <p className="text-xs text-bronze mt-1">Step {step} of 3</p>
             </div>
-            <PlusCircle className="text-gold" size={32} />
+            <PlusCircle className="text-gold shrink-0" size={28} />
           </div>
 
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          <form onSubmit={handleSubmit(onSubmit, onInvalid)} className="space-y-6">
             {/* Step 1: Category Selection */}
             {step === 1 && (
               <div className="space-y-6">
                 <Select
                   label="Category Type"
                   options={
-                    categories?.map((cat) => ({
-                      value: cat.name.toUpperCase().replace(" ", "_"),
-                      label: cat.name,
-                    })) || []
+                    categories?.map((cat) => {
+                      const value = cat.name.toUpperCase().replace(" ", "_");
+                      // Format Title Case label (e.g. For Sale)
+                      const label = cat.name
+                        .replace("_", " ")
+                        .toLowerCase()
+                        .replace(/\b\w/g, (l) => l.toUpperCase());
+                      return { value, label };
+                    }) || []
                   }
                   placeholder="Select Category"
                   error={errors.adType?.message}
@@ -226,7 +277,7 @@ export default function CreateAdPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <Input
                     label="Price ($)"
-                    type="number"
+                    type="text"
                     placeholder="0.00"
                     disabled={watch("isFree")}
                     error={errors.price?.message}
@@ -239,6 +290,38 @@ export default function CreateAdPage() {
                     error={errors.location?.message}
                     {...register("location")}
                   />
+                </div>
+
+                {/* Picture Upload Section */}
+                <div className="space-y-2 pt-2">
+                  <label className="text-sm font-medium text-walnut">Listing Pictures</label>
+                  <div className="border-2 border-dashed border-sand hover:border-gold/60 bg-linen/30 rounded-2xl p-6 text-center space-y-3 transition-colors">
+                    <div className="flex flex-col items-center gap-2 text-sand-dark">
+                      <ImagePlus size={36} className="text-gold stroke-[1.5]" />
+                      <p className="text-xs font-semibold text-coffee">
+                        Drag and drop photos here, or <span className="text-amber underline cursor-pointer">browse</span>
+                      </p>
+                      <p className="text-[11px] text-sand-dark">
+                        Supports PNG, JPG, or WEBP up to 5MB (Simulated Gallery UI)
+                      </p>
+                    </div>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      multiple
+                      className="hidden"
+                      id="ad-image-upload"
+                      onChange={() => {
+                        setValue("hasImage", true);
+                        toast.success("Photos selected for upload!");
+                      }}
+                    />
+                    <label htmlFor="ad-image-upload" className="inline-block">
+                      <Button type="button" variant="secondary" size="sm" leftIcon={<Upload size={14} />}>
+                        Select Images
+                      </Button>
+                    </label>
+                  </div>
                 </div>
 
                 <div className="flex items-center gap-6 pt-2">

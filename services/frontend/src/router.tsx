@@ -2,6 +2,7 @@ import React from "react";
 import { createBrowserRouter, RouterProvider } from "react-router";
 import AppLayout from "./components/layout/AppLayout";
 import ProtectedRoute from "./components/guards/ProtectedRoute";
+import GuestRoute from "./components/guards/GuestRoute";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import NotFoundPage from "./pages/NotFoundPage";
@@ -11,23 +12,26 @@ import AdDetailPage from "./pages/AdDetailPage";
 import CreateAdPage from "./pages/CreateAdPage";
 import SearchResultsPage from "./pages/SearchResultsPage";
 
-// Placeholders for Phase 4 pages
-const DashboardPlaceholder = () => (
-  <div className="py-12">
-    <h1 className="text-2xl font-bold text-walnut mb-4">User Dashboard</h1>
-    <p className="text-bronze">Manage your listings here.</p>
-  </div>
-);
+import DashboardPage from "./pages/DashboardPage";
+import ProfilePage from "./pages/ProfilePage";
+import EditProfilePage from "./pages/EditProfilePage";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <AppLayout />,
     children: [
-      // Public Routes
+      // Public Home Route
       { index: true, element: <HomePage /> },
-      { path: "login", element: <LoginPage /> },
-      { path: "register", element: <RegisterPage /> },
+
+      // Guest-only Routes (Redirect to / if logged in)
+      {
+        element: <GuestRoute />,
+        children: [
+          { path: "login", element: <LoginPage /> },
+          { path: "register", element: <RegisterPage /> },
+        ],
+      },
       { path: "browse", element: <BrowsePage /> },
       { path: "browse/:category", element: <BrowsePage /> },
 
@@ -38,9 +42,9 @@ const router = createBrowserRouter([
           { path: "ads/:id", element: <AdDetailPage /> },
           { path: "ads/new", element: <CreateAdPage /> },
           { path: "ads/:id/edit", element: <CreateAdPage /> },
-          { path: "dashboard", element: <DashboardPlaceholder /> },
-          { path: "profile/:id", element: <DashboardPlaceholder /> },
-          { path: "profile/:id/edit", element: <DashboardPlaceholder /> },
+          { path: "dashboard", element: <DashboardPage /> },
+          { path: "profile/:id", element: <ProfilePage /> },
+          { path: "profile/:id/edit", element: <EditProfilePage /> },
           { path: "search", element: <SearchResultsPage /> },
         ],
       },
@@ -49,7 +53,7 @@ const router = createBrowserRouter([
       {
         element: <ProtectedRoute allowedRoles={["ADMIN"]} />,
         children: [
-          { path: "admin", element: <DashboardPlaceholder /> },
+          { path: "admin", element: <DashboardPage /> },
         ],
       },
 

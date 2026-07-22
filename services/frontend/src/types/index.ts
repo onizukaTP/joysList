@@ -146,8 +146,8 @@ export interface AdRequestDto {
 // Enums
 // ============================================
 export type HousingType = "APARTMENT" | "CONDO" | "HOUSE" | "TOWNHOUSE" | "DUPLEX" | "ROOM";
-export type Laundry = "IN_UNIT" | "ON_SITE" | "NONE";
-export type Parking = "GARAGE" | "STREET" | "COVERED" | "NONE" | "VALET";
+export type Laundry = "UNIT" | "HOOKUPS" | "INBUILDING" | "ONSITE" | "NOLAUNDRY";
+export type Parking = "CARPORT" | "ATTACHED_GARAGE" | "DETACHED_GARAGE" | "OFF_STREET" | "STREET" | "VALET" | "NOPARKING";
 export type RentPeriod = "MONTHLY" | "WEEKLY" | "DAILY";
 export type SoldBy = "OWNER" | "DEALER";
 export type ItemCondition = "NEW" | "USED";
