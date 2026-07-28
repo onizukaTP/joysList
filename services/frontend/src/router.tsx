@@ -10,9 +10,11 @@ import HomePage from "./pages/HomePage";
 import BrowsePage from "./pages/BrowsePage";
 import AdDetailPage from "./pages/AdDetailPage";
 import CreateAdPage from "./pages/CreateAdPage";
+import EditAdPage from "./pages/EditAdPage";
 import SearchResultsPage from "./pages/SearchResultsPage";
 
 import DashboardPage from "./pages/DashboardPage";
+import AdminDashboardPage from "./pages/admin/AdminDashboardPage";
 import ProfilePage from "./pages/ProfilePage";
 import EditProfilePage from "./pages/EditProfilePage";
 
@@ -41,7 +43,7 @@ const router = createBrowserRouter([
         children: [
           { path: "ads/:id", element: <AdDetailPage /> },
           { path: "ads/new", element: <CreateAdPage /> },
-          { path: "ads/:id/edit", element: <CreateAdPage /> },
+          { path: "ads/:id/edit", element: <EditAdPage /> },
           { path: "dashboard", element: <DashboardPage /> },
           { path: "profile/:id", element: <ProfilePage /> },
           { path: "profile/:id/edit", element: <EditProfilePage /> },
@@ -53,7 +55,7 @@ const router = createBrowserRouter([
       {
         element: <ProtectedRoute allowedRoles={["ADMIN"]} />,
         children: [
-          { path: "admin", element: <DashboardPage /> },
+          { path: "admin", element: <AdminDashboardPage /> },
         ],
       },
 
