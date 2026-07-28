@@ -16,7 +16,7 @@ export default function AdCard({ ad, hasImage = false }: AdCardProps) {
     ad.price !== null && ad.price !== undefined
       ? ad.price === 0
         ? "Free"
-        : `$${ad.price.toLocaleString()}`
+        : `₹${ad.price.toLocaleString()}`
       : null;
 
   return (

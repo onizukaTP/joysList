@@ -170,7 +170,7 @@ export default function AdDetailPage() {
             <div className="bg-espresso text-cream border border-espresso/20 rounded-3xl p-6 flex flex-col justify-center text-center space-y-1 shadow-md">
               <span className="text-xs text-sand uppercase tracking-widest font-semibold">Listing Price</span>
               <span className="text-3xl font-black">
-                {ad.price === 0 ? "Free" : `$${ad.price.toLocaleString()}`}
+                {ad.price === 0 ? "Free" : `₹${ad.price.toLocaleString()}`}
               </span>
             </div>
           )}

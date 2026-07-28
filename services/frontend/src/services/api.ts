@@ -81,9 +81,10 @@ api.interceptors.response.use(
 
       const refreshToken = localStorage.getItem("refreshToken");
       if (!refreshToken) {
-        // No refresh token, clear credentials and redirect/reject
+        // No refresh token, clear credentials and notify user
         localStorage.removeItem("accessToken");
         localStorage.removeItem("refreshToken");
+        window.dispatchEvent(new Event("session-expired"));
         window.dispatchEvent(new Event("auth-logout"));
         return Promise.reject(error);
       }
@@ -106,6 +107,7 @@ api.interceptors.response.use(
         processQueue(refreshError, null);
         localStorage.removeItem("accessToken");
         localStorage.removeItem("refreshToken");
+        window.dispatchEvent(new Event("session-expired"));
         window.dispatchEvent(new Event("auth-logout"));
         return Promise.reject(refreshError);
       } finally {

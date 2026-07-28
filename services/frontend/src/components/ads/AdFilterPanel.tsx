@@ -1,4 +1,3 @@
-import React from "react";
 import type { UseFormRegister } from "react-hook-form";
 import type { AdType } from "../../types";
 import Input from "../ui/Input";
@@ -40,10 +39,14 @@ export default function AdFilterPanel({ category, register }: AdFilterPanelProps
             options={[
               { value: "APARTMENT", label: "Apartment" },
               { value: "CONDO", label: "Condo" },
-              { value: "HOUSE", label: "House" },
               { value: "TOWNHOUSE", label: "Townhouse" },
+              { value: "HOUSE", label: "House" },
+              { value: "LOFT", label: "Loft" },
+              { value: "CABIN", label: "Cabin" },
+              { value: "STUDIO", label: "Studio" },
               { value: "DUPLEX", label: "Duplex" },
-              { value: "ROOM", label: "Room" },
+              { value: "OFFICE", label: "Office" },
+              { value: "OTHER", label: "Other" },
             ]}
             placeholder="Select Type"
             {...register("housingType")}
@@ -51,9 +54,9 @@ export default function AdFilterPanel({ category, register }: AdFilterPanelProps
           <Select
             label="Rent Period"
             options={[
-              { value: "MONTHLY", label: "Monthly" },
-              { value: "WEEKLY", label: "Weekly" },
               { value: "DAILY", label: "Daily" },
+              { value: "WEEKLY", label: "Weekly" },
+              { value: "MONTHLY", label: "Monthly" },
             ]}
             placeholder="Select Period"
             {...register("rentPeriod")}
@@ -61,11 +64,11 @@ export default function AdFilterPanel({ category, register }: AdFilterPanelProps
           <Select
             label="Laundry"
             options={[
-              { value: "in_unit", label: "In-unit" },
-              { value: "hookups", label: "Hookups" },
-              { value: "in_building", label: "In-building" },
-              { value: "on_site", label: "On-site" },
-              { value: "no_laundry", label: "No Laundry" },
+              { value: "UNIT", label: "In-unit" },
+              { value: "HOOKUPS", label: "Hookups" },
+              { value: "INBUILDING", label: "In Building" },
+              { value: "ONSITE", label: "On-site" },
+              { value: "NOLAUNDRY", label: "No Laundry" },
             ]}
             placeholder="Select Laundry"
             {...register("laundry")}
@@ -73,13 +76,13 @@ export default function AdFilterPanel({ category, register }: AdFilterPanelProps
           <Select
             label="Parking"
             options={[
-              { value: "attached_garage", label: "Attached Garage" },
-              { value: "detached_garage", label: "Detached Garage" },
-              { value: "carport", label: "Carport" },
-              { value: "off_street", label: "Off-street" },
-              { value: "street", label: "Street" },
-              { value: "valet", label: "Valet" },
-              { value: "no_parking", label: "No Parking" },
+              { value: "CARPORT", label: "Carport" },
+              { value: "ATTACHED_GARAGE", label: "Attached Garage" },
+              { value: "DETACHED_GARAGE", label: "Detached Garage" },
+              { value: "OFF_STREET", label: "Off Street" },
+              { value: "STREET", label: "Street Parking" },
+              { value: "VALET", label: "Valet" },
+              { value: "NOPARKING", label: "No Parking" },
             ]}
             placeholder="Select Parking"
             {...register("parking")}
@@ -116,6 +119,11 @@ export default function AdFilterPanel({ category, register }: AdFilterPanelProps
             label="Condition"
             options={[
               { value: "NEW", label: "New" },
+              { value: "LIKE_NEW", label: "Like New" },
+              { value: "EXCELLENT", label: "Excellent" },
+              { value: "GOOD", label: "Good" },
+              { value: "FAIR", label: "Fair" },
+              { value: "SALVAGE", label: "Salvage" },
               { value: "USED", label: "Used" },
             ]}
             placeholder="Select condition"
@@ -129,9 +137,10 @@ export default function AdFilterPanel({ category, register }: AdFilterPanelProps
           <Select
             label="Employment Type"
             options={[
-              { value: "FULL_TIME", label: "Full-time" },
-              { value: "PART_TIME", label: "Part-time" },
+              { value: "FULL_TIME", label: "Full Time" },
+              { value: "PART_TIME", label: "Part Time" },
               { value: "CONTRACT", label: "Contract" },
+              { value: "EMPLOYEE_CHOICE", label: "Employee Choice" },
             ]}
             placeholder="Select employment"
             {...register("employmentType")}
@@ -159,13 +168,25 @@ export default function AdFilterPanel({ category, register }: AdFilterPanelProps
             label="Service Type"
             options={[
               { value: "AUTOMOTIVE", label: "Automotive" },
-              { value: "BEAUTY", label: "Beauty & Health" },
-              { value: "CELL_PHONE", label: "Cell Phone & Mobile" },
-              { value: "COMPUTER", label: "Computer & Tech" },
-              { value: "HOUSEHOLD", label: "Household Services" },
-              { value: "LABOR", label: "Labor & Moving" },
-              { value: "LESSONS", label: "Lessons & Tutoring" },
-              { value: "PET", label: "Pet Services" },
+              { value: "BEAUTY", label: "Beauty" },
+              { value: "CELL_PHONE_OR_MOBILE", label: "Cell Phone / Mobile" },
+              { value: "COMPUTER", label: "Computer" },
+              { value: "CYCLE", label: "Cycle" },
+              { value: "EVENT", label: "Event" },
+              { value: "FARM_AND_GARDEN", label: "Farm & Garden" },
+              { value: "FINANCIAL", label: "Financial" },
+              { value: "HEALTH_AND_WELLNESS", label: "Health & Wellness" },
+              { value: "HOUSEHOLD", label: "Household" },
+              { value: "LABOR_AND_MOVING", label: "Labor & Moving" },
+              { value: "LEGAL", label: "Legal" },
+              { value: "LESSONS_AND_TUTORING", label: "Lessons & Tutoring" },
+              { value: "MARINE", label: "Marine" },
+              { value: "PET", label: "Pet" },
+              { value: "REAL_ESTATE", label: "Real Estate" },
+              { value: "SKILLED_TRADE", label: "Skilled Trade" },
+              { value: "SMALL_BIZ_ADS", label: "Small Biz Ads" },
+              { value: "TRAVEL_OR_VACATION", label: "Travel / Vacation" },
+              { value: "WRITE_OR_EDIT_OR_TRANSLATION", label: "Writing / Editing / Translation" },
             ]}
             placeholder="Select Service Type"
             {...register("serviceType")}
@@ -178,11 +199,14 @@ export default function AdFilterPanel({ category, register }: AdFilterPanelProps
           <Select
             label="Gig Category"
             options={[
-              { value: "COMPUTER", label: "Computer / Tech" },
-              { value: "CREATIVE", label: "Creative (Design / Photo)" },
-              { value: "CREW", label: "Crew (Event help)" },
-              { value: "DOMESTIC", label: "Domestic (Cleaning / Yard)" },
+              { value: "LABOR", label: "Labor" },
+              { value: "DOMESTIC", label: "Domestic" },
               { value: "EVENT", label: "Event" },
+              { value: "COMPUTER", label: "Computer" },
+              { value: "CREATIVE", label: "Creative" },
+              { value: "CREW", label: "Crew" },
+              { value: "TALENT", label: "Talent" },
+              { value: "WRITING", label: "Writing" },
             ]}
             placeholder="Select Gig Type"
             {...register("gigs")}
@@ -204,10 +228,18 @@ export default function AdFilterPanel({ category, register }: AdFilterPanelProps
           <Select
             label="Community Group"
             options={[
-              { value: "ACTIVITIES", label: "Activities" },
+              { value: "ACTIVITY_PARTNERS", label: "Activity Partners" },
               { value: "ARTISTS", label: "Artists" },
+              { value: "CHILDCARE", label: "Childcare" },
               { value: "GENERAL", label: "General" },
-              { value: "LOST_FOUND", label: "Lost & Found" },
+              { value: "GROUPS", label: "Groups" },
+              { value: "LOCAL_NEWS_AND_VIEWS", label: "Local News & Views" },
+              { value: "LOST_AND_FOUND", label: "Lost & Found" },
+              { value: "MISSED_CONNECTIONS", label: "Missed Connections" },
+              { value: "MUSICIANS", label: "Musicians" },
+              { value: "PETS", label: "Pets" },
+              { value: "POLITICS", label: "Politics" },
+              { value: "RANTS_AND_RAVES", label: "Rants & Raves" },
               { value: "RIDESHARE", label: "Rideshare" },
               { value: "VOLUNTEERS", label: "Volunteers" },
             ]}
@@ -231,11 +263,13 @@ export default function AdFilterPanel({ category, register }: AdFilterPanelProps
           <Select
             label="Completed Education"
             options={[
-              { value: "HIGH_SCHOOL", label: "High School" },
-              { value: "ASSOCIATE", label: "Associate Degree" },
-              { value: "BACHELOR", label: "Bachelor's Degree" },
-              { value: "MASTER", label: "Master's Degree" },
-              { value: "DOCTORATE", label: "Doctorate Degree" },
+              { value: "LESS_THAN_HIGH_SCHOOL", label: "Less than High School" },
+              { value: "HIGH_SCHOOL_OR_GED", label: "High School or GED" },
+              { value: "SOME_COLLEGE", label: "Some College" },
+              { value: "ASSOCIATES", label: "Associates Degree" },
+              { value: "BACHELORS", label: "Bachelors Degree" },
+              { value: "MASTERS", label: "Masters Degree" },
+              { value: "DOCTORAL", label: "Doctoral Degree" },
             ]}
             placeholder="Select Education"
             {...register("educationCompleted")}

@@ -10,9 +10,16 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Logo Section */}
           <div className="space-y-4">
-            <span className="text-xl font-bold tracking-tight text-cream">
-              Joys<span className="text-gold">List</span>
-            </span>
+            <div className="flex items-center gap-2.5">
+              <img
+                src="/logo.png"
+                alt="JoysList Logo"
+                className="w-8 h-8 rounded-full object-cover border border-gold/70 shadow-sm"
+              />
+              <span className="text-xl font-bold tracking-tight text-cream">
+                Joys<span className="text-gold">List</span>
+              </span>
+            </div>
             <p className="text-xs text-sand-dark leading-relaxed">
               Experience local shopping redesigned. A premium, modern, and warm classified marketplace for your neighborhood.
             </p>
@@ -70,8 +77,8 @@ export default function Footer() {
         <div className="mt-12 pt-8 border-t border-sand-dark/10 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-sand-dark">
           <p>© {currentYear} JoysList Inc. All rights reserved.</p>
           <div className="flex gap-4">
-            <span className="hover:text-gold transition-colors cursor-pointer">English (US)</span>
-            <span className="hover:text-gold transition-colors cursor-pointer">USD ($)</span>
+            <span className="hover:text-gold transition-colors cursor-pointer">English (IN)</span>
+            <span className="hover:text-gold transition-colors cursor-pointer">INR (₹)</span>
           </div>
         </div>
       </div>

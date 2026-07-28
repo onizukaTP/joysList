@@ -130,7 +130,7 @@ export default function DashboardPage() {
                       {ad.subcategoryName}
                     </Badge>
                     <span className="text-sm font-bold text-gold">
-                      {ad.price === 0 ? "FREE" : ad.price ? `$${ad.price.toLocaleString()}` : "Contact for Price"}
+                      {ad.price === 0 ? "FREE" : ad.price ? `₹${ad.price.toLocaleString()}` : "Contact for Price"}
                     </span>
                   </div>
                   <h3 className="font-bold text-walnut text-lg line-clamp-1">{ad.title}</h3>

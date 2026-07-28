@@ -130,36 +130,12 @@ export default function CreateAdPage() {
     console.log("[CreateAd] Submitting form data:", data);
     setLoading(true);
     try {
-      // Clean up empty optional fields and convert frontend casing to backend Enums
+      // Clean up empty optional fields
       const cleanedData: Record<string, any> = {};
-      
-      const LAUNDRY_MAP: Record<string, string> = {
-        in_unit: "UNIT",
-        hookups: "HOOKUPS",
-        in_building: "INBUILDING",
-        on_site: "ONSITE",
-        no_laundry: "NOLAUNDRY",
-      };
-
-      const PARKING_MAP: Record<string, string> = {
-        attached_garage: "ATTACHED_GARAGE",
-        detached_garage: "DETACHED_GARAGE",
-        carport: "CARPORT",
-        off_street: "OFF_STREET",
-        street: "STREET",
-        valet: "VALET",
-        no_parking: "NOPARKING",
-      };
 
       Object.entries(data).forEach(([key, val]) => {
         if (val !== "" && val !== undefined) {
-          if (key === "laundry" && typeof val === "string" && LAUNDRY_MAP[val]) {
-            cleanedData[key] = LAUNDRY_MAP[val];
-          } else if (key === "parking" && typeof val === "string" && PARKING_MAP[val]) {
-            cleanedData[key] = PARKING_MAP[val];
-          } else {
-            cleanedData[key] = val;
-          }
+          cleanedData[key] = val;
         }
       });
 
@@ -277,7 +253,7 @@ export default function CreateAdPage() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <Input
-                    label="Price ($)"
+                    label="Price (₹)"
                     type="text"
                     placeholder="0.00"
                     disabled={watch("isFree")}

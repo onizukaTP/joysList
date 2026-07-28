@@ -51,7 +51,12 @@ export default function Navbar() {
     <header className="sticky top-0 z-40 bg-cream/90 backdrop-blur-md border-b border-sand shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         {/* Brand Logo */}
-        <Link to="/" className="flex items-center gap-2 group">
+        <Link to="/" className="flex items-center gap-2.5 group">
+          <img
+            src="/logo.png"
+            alt="JoysList Logo"
+            className="w-9 h-9 rounded-full object-cover border-2 border-gold/70 group-hover:scale-105 transition-transform duration-200 shadow-sm"
+          />
           <span className="text-2xl font-black tracking-tight text-walnut group-hover:text-gold transition-colors duration-200">
             Joys<span className="text-gold group-hover:text-walnut">List</span>
           </span>

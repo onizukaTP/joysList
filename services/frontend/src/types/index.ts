@@ -145,112 +145,148 @@ export interface AdRequestDto {
 // ============================================
 // Enums
 // ============================================
-export type HousingType = "APARTMENT" | "CONDO" | "HOUSE" | "TOWNHOUSE" | "DUPLEX" | "ROOM";
+export type HousingType =
+  | "APARTMENT"
+  | "CONDO"
+  | "TOWNHOUSE"
+  | "HOUSE"
+  | "LOFT"
+  | "CABIN"
+  | "STUDIO"
+  | "DUPLEX"
+  | "OFFICE"
+  | "OTHER";
+
 export type Laundry = "UNIT" | "HOOKUPS" | "INBUILDING" | "ONSITE" | "NOLAUNDRY";
-export type Parking = "CARPORT" | "ATTACHED_GARAGE" | "DETACHED_GARAGE" | "OFF_STREET" | "STREET" | "VALET" | "NOPARKING";
-export type RentPeriod = "MONTHLY" | "WEEKLY" | "DAILY";
+
+export type Parking =
+  | "CARPORT"
+  | "ATTACHED_GARAGE"
+  | "DETACHED_GARAGE"
+  | "OFF_STREET"
+  | "STREET"
+  | "VALET"
+  | "NOPARKING";
+
+export type RentPeriod = "DAILY" | "WEEKLY" | "MONTHLY";
+
 export type SoldBy = "OWNER" | "DEALER";
-export type ItemCondition = "NEW" | "USED";
+
+export type ItemCondition =
+  | "NEW"
+  | "LIKE_NEW"
+  | "EXCELLENT"
+  | "GOOD"
+  | "FAIR"
+  | "SALVAGE"
+  | "USED";
+
 export type EventType =
-  | "ARTS"
-  | "CAREER"
-  | "CHARITY"
-  | "CLASSES"
-  | "CLUBS"
-  | "COMMUNITY"
+  | "FREE"
+  | "FOOD_OR_DRINK"
+  | "LITERARY"
+  | "CHARITABLE"
   | "DANCE"
-  | "FESTIVAL"
-  | "FOOD"
-  | "GAMES"
-  | "MUSIC"
-  | "OUTDOORS"
-  | "SALE"
+  | "SUSTAINABILITY"
   | "SINGLES"
-  | "SPORTS";
-export type GigType = "COMPUTER" | "CREATIVE" | "CREW" | "DOMESTIC" | "EVENT";
-export type PaymentStatus = "PAID" | "UNPAID";
-export type EmploymentType = "FULL_TIME" | "PART_TIME" | "CONTRACT";
-export type JobType =
-  | "ACCOUNTING"
-  | "ADMIN"
-  | "ARCHITECT"
-  | "BIOTECH"
-  | "BUSINESS"
-  | "CUSTOMER_SERVICE"
-  | "EDUCATION"
-  | "ENGINEERING"
-  | "FINANCE"
-  | "FOOD"
-  | "GENERAL"
-  | "GOVERNMENT"
-  | "HEALTHCARE"
-  | "HOSPITALITY"
-  | "HR"
-  | "IT"
-  | "LEGAL"
-  | "MANUFACTURING"
-  | "MARKETING"
-  | "MEDIA"
-  | "NONPROFIT"
-  | "QA"
-  | "REAL_ESTATE"
-  | "RETAIL"
-  | "SALES"
-  | "SALON"
-  | "SCIENCE"
-  | "SECURITY"
-  | "SKILLED_TRADE"
-  | "SOFTWARE"
-  | "SYSTEMS"
-  | "TECHNICAL"
-  | "TRANSPORT"
-  | "TV_FILM"
+  | "FITNESS_OR_HEALTH"
+  | "COMPETITION"
+  | "SALE"
+  | "TECH"
+  | "OUTDOOR"
+  | "KID_FRIENDLY"
+  | "MUSIC"
+  | "CAREER"
+  | "ART_OR_FILM"
+  | "FEST_OR_FAIR";
+
+export type GigType =
+  | "LABOR"
+  | "DOMESTIC"
+  | "EVENT"
+  | "COMPUTER"
+  | "CREATIVE"
+  | "CREW"
+  | "TALENT"
   | "WRITING";
+
+export type PaymentStatus = "PAID" | "UNPAID";
+
+export type EmploymentType = "FULL_TIME" | "PART_TIME" | "CONTRACT" | "EMPLOYEE_CHOICE";
+
+export type JobType =
+  | "TRANSPORTATION"
+  | "GENERAL_LABOR"
+  | "SKILLED_TRADES_OR_ARTISAN"
+  | "SALES"
+  | "FOOD_BEVERAGE_HOSPITALITY"
+  | "CUSTOMER_SERVICE"
+  | "ET_CETERA"
+  | "ADMIN_OR_OFFICE"
+  | "EDUCATION_OR_TEACHING"
+  | "RETAIL_OR_WHOLESALE"
+  | "ACCOUNTING_OR_FINANCE"
+  | "HEALTHCARE"
+  | "BUSINESS_OR_MANAGEMENT"
+  | "MANUFACTURING"
+  | "MARKETING_OR_ADVERTISEMENT"
+  | "REAL_ESTATE"
+  | "SALON_SPA_FITNESS"
+  | "SCIENCE_BIOTECH"
+  | "SECURITY"
+  | "TV_FILM_VIDEO_RADIO"
+  | "LEGAL_PARALEGAL"
+  | "SYSTEMS_NETWORKING"
+  | "WRITING_EDITING";
+
 export type ServiceType =
   | "AUTOMOTIVE"
   | "BEAUTY"
-  | "CELL_PHONE"
+  | "CELL_PHONE_OR_MOBILE"
   | "COMPUTER"
-  | "CREATIVE"
   | "CYCLE"
   | "EVENT"
-  | "FARM"
+  | "FARM_AND_GARDEN"
   | "FINANCIAL"
-  | "HEALTH"
+  | "HEALTH_AND_WELLNESS"
   | "HOUSEHOLD"
-  | "LABOR"
+  | "LABOR_AND_MOVING"
   | "LEGAL"
-  | "LESSONS"
+  | "LESSONS_AND_TUTORING"
   | "MARINE"
   | "PET"
   | "REAL_ESTATE"
   | "SKILLED_TRADE"
-  | "SMALL_BIZ"
-  | "THERAPEUTIC"
-  | "TRAVEL"
-  | "WRITING";
+  | "SMALL_BIZ_ADS"
+  | "TRAVEL_OR_VACATION"
+  | "WRITE_OR_EDIT_OR_TRANSLATION";
+
 export type CommunityType =
-  | "ACTIVITIES"
+  | "ACTIVITY_PARTNERS"
   | "ARTISTS"
   | "CHILDCARE"
   | "GENERAL"
   | "GROUPS"
-  | "LOCAL_NEWS"
-  | "LOST_FOUND"
+  | "LOCAL_NEWS_AND_VIEWS"
+  | "LOST_AND_FOUND"
   | "MISSED_CONNECTIONS"
   | "MUSICIANS"
   | "PETS"
   | "POLITICS"
-  | "RANTS_RAVES"
+  | "RANTS_AND_RAVES"
   | "RIDESHARE"
   | "VOLUNTEERS";
+
 export type LostAndFound = "LOST" | "FOUND";
+
 export type EducationCompleted =
-  | "HIGH_SCHOOL"
-  | "ASSOCIATE"
-  | "BACHELOR"
-  | "MASTER"
-  | "DOCTORATE";
+  | "LESS_THAN_HIGH_SCHOOL"
+  | "HIGH_SCHOOL_OR_GED"
+  | "SOME_COLLEGE"
+  | "ASSOCIATES"
+  | "BACHELORS"
+  | "MASTERS"
+  | "DOCTORAL";
 
 // ============================================
 // Pagination
