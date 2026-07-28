@@ -31,9 +31,9 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(auth -> auth
 
-                        // Test endpoint
+                        // Test & Actuator endpoints
                         .requestMatchers(
-                                "/hello/**", "/test/**"
+                                "/hello/**", "/test/**", "/actuator/**"
                         ).permitAll()
 
                         // Swagger
