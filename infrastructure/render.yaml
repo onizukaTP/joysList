@@ -1,0 +1,61 @@
+# Render Infrastructure as Code Blueprint for JoysList Microservices
+services:
+  # ----------------------------------------------------
+  # API Gateway
+  # ----------------------------------------------------
+  - type: web
+    name: joyslist-api-gateway
+    env: docker
+    dockerfilePath: services/api-gateway/Dockerfile
+    plan: free
+    region: singapore
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: LISTING_SERVICE_URL
+        value: http://joyslist-listing-service:8081
+      - key: USER_SERVICE_URL
+        value: http://joyslist-user-service:8083
+
+  # ----------------------------------------------------
+  # Listing Service
+  # ----------------------------------------------------
+  - type: web
+    name: joyslist-listing-service
+    env: docker
+    dockerfilePath: services/listing-service/Dockerfile
+    plan: free
+    region: singapore
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: JWT_SECRET_KEY
+        generateValue: true
+
+  # ----------------------------------------------------
+  # User Service
+  # ----------------------------------------------------
+  - type: web
+    name: joyslist-user-service
+    env: docker
+    dockerfilePath: services/user-service/Dockerfile
+    plan: free
+    region: singapore
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: JWT_SECRET_KEY
+        generateValue: true
+
+  # ----------------------------------------------------
+  # Notification Service
+  # ----------------------------------------------------
+  - type: web
+    name: joyslist-notification-service
+    env: docker
+    dockerfilePath: services/notification-service/Dockerfile
+    plan: free
+    region: singapore
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
