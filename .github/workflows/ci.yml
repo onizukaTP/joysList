@@ -54,7 +54,10 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
+      - name: Build and Install Shared Modules
+        run: mvn clean install -DskipTests
+
       - name: Build & Run Unit Tests for ${{ matrix.service }}
         run: |
           cd services/${{ matrix.service }}
-          mvn clean test
+          mvn test
